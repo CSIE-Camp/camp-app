@@ -10,7 +10,7 @@ export const load: LayoutLoad = async ({ data }) => {
 			dsn: "https://8f5875b5c82a4dd885e2d93ac6691a43@o923427.ingest.sentry.io/4505063453753344",
 			integrations: [new Sentry.BrowserTracing(), new Sentry.Replay()],
 			tracesSampleRate: 1.0,
-			replaysSessionSampleRate: 0.1,
+			replaysSessionSampleRate: 0.5,
 			replaysOnErrorSampleRate: 1.0,
 		});
 
