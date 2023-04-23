@@ -7,4 +7,5 @@ export type Field = {
 	options?: string[];
 	type?: HTMLInputTypeAttribute | "textarea";
 	placeholder?: string;
+	image?: string;
 };

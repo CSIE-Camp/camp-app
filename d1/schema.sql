@@ -12,7 +12,6 @@ CREATE TABLE Profile (
     parent_name TEXT NOT NULL,
     parent_relation TEXT NOT NULL,
     parent_phone TEXT NOT NULL,
-    travel_history TEXT NOT NULL,
     food_type TEXT NOT NULL,
     allergy_source TEXT NOT NULL,
     disease TEXT NOT NULL,

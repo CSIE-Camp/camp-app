@@ -12,10 +12,10 @@
 			options: ["7/3 ~ 7/6", "7/3 ~ 7/7", "7/4 ~ 7/7"],
 		},
 		q2: {
-			display: "報名費用為多少新台幣呢？（請參閱報名資訊）",
+			display: "報名費用原價為多少新台幣呢？（請參閱報名資訊）",
 			value: "",
 			validate: () => true,
-			options: ["7600", "8700", "9800"],
+			options: ["7900", "8900", "9900", "18900"],
 		},
 		q3: {
 			display: "下列哪項「不是」你在營隊會學到的東西？（請參閱營隊介紹）",
@@ -23,16 +23,33 @@
 			validate: () => true,
 			options: ["製作網頁", "資訊安全與密碼學", "製作 Discord Bot", "製作虛擬實境遊戲"],
 		},
+		q4: {
+			display:
+				"營隊的住宿地點（旅居文旅-台北松山機場館）每房「沒有」什麼設施呢？（請參閱報名資訊）",
+			value: "",
+			validate: () => true,
+			options: [
+				"高速網路連線",
+				"乾溼分離式衛浴 / 浴缸式衛浴",
+				"Panasonic 免治馬桶",
+				"快煮壺",
+				"吸收式無聲冰箱",
+				"電子式保險箱",
+				"液晶電視",
+				"戶外游泳池",
+			],
+		},
 	};
 
 	const ans: Record<string, string> = {
 		q1: "7/3 ~ 7/7",
-		q2: "8700",
+		q2: "8900",
 		q3: "製作虛擬實境遊戲",
+		q4: "戶外游泳池",
 	};
 
 	async function check() {
-		let wrongs = [];
+		const wrongs = [];
 
 		const qs = Object.entries(questions);
 		for (let i = 0; i < qs.length; i++) {

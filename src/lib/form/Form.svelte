@@ -11,6 +11,11 @@
 		<label class="label" for="{id}-{key}">
 			{value.display}
 		</label>
+		{#if value.image}
+			<a class="contents" href={value.image} target="_blank">
+				<img class="mb-4 w-full max-w-md rounded-lg" src={value.image} alt={value.image} />
+			</a>
+		{/if}
 		{#if value.type === "textarea"}
 			<textarea
 				id="{id}-{key}"

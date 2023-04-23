@@ -77,15 +77,6 @@
 		},
 	};
 
-	let travel: Record<string, Field> = {
-		travel_history: {
-			display: "過去 14 天是否曾出國至其他境外地區？",
-			value: "否",
-			validate: (value) => ProfileSchema.shape.travel_history.safeParse(value).success,
-			options: ["否", "是"],
-		},
-	};
-
 	let others: Record<string, Field> = {
 		food_type: {
 			display: "飲食習慣",
@@ -107,7 +98,8 @@
 			display: "衣服尺寸",
 			value: "M",
 			validate: (value) => ProfileSchema.shape.clothes_size.safeParse(value).success,
-			options: ["XS", "S", "M", "L", "XL"],
+			options: ["SS", "S", "M", "L", "XL", "2L", "3L", "4L", "5L", "6L"],
+			image: "https://i.imgur.com/wcB2Fov.png",
 		},
 	};
 
@@ -196,7 +188,6 @@
 	async function save() {
 		const data = Object.entries({
 			...basics,
-			...travel,
 			...emergency,
 			...others,
 			...about,
@@ -232,21 +223,21 @@
 				},
 			});
 
-			const json = ProfileSchema.parse((await res.json<{ profile: unknown }>())?.profile);
+			if (res.ok) {
+				const json = ProfileSchema.parse((await res.json<{ profile: unknown }>())?.profile);
 
-			Object.entries(json).forEach(([key, value]) => {
-				if (basics[key]) {
-					basics[key].value = value;
-				} else if (travel[key]) {
-					travel[key].value = value;
-				} else if (emergency[key]) {
-					emergency[key].value = value;
-				} else if (others[key]) {
-					others[key].value = value;
-				} else if (about[key]) {
-					about[key].value = value;
-				}
-			});
+				Object.entries(json).forEach(([key, value]) => {
+					if (basics[key]) {
+						basics[key].value = value;
+					} else if (emergency[key]) {
+						emergency[key].value = value;
+					} else if (others[key]) {
+						others[key].value = value;
+					} else if (about[key]) {
+						about[key].value = value;
+					}
+				});
+			}
 		} catch (err) {
 			console.error(err);
 		}
@@ -302,10 +293,6 @@
 
 		<h2 class="text-2xl font-bold">緊急聯絡人</h2>
 		<Form bind:form={emergency} />
-		<div class="divider" />
-
-		<h2 class="text-2xl font-bold">防疫旅遊史</h2>
-		<Form bind:form={travel} />
 		<div class="divider" />
 
 		<h2 class="text-2xl font-bold">其他</h2>

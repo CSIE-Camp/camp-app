@@ -194,7 +194,19 @@
 			{/if}
 
 			<div class="divider" />
-			<h2 class="text-lg md:text-xl">聯絡我們</h2>
+			<h2 class="mb-2 text-lg md:text-xl">聯絡我們</h2>
+			<p class="mb-2 text-sm">
+				你可以在
+				<a
+					href="https://camp.csie.cool"
+					class="text-primary hover:underline"
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					師大資工營官方網站
+				</a>
+				上找到更多營隊資訊！
+			</p>
 			<p class="text-sm">
 				如果你有任何問題，歡迎來信至
 				<a

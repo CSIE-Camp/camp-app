@@ -19,7 +19,7 @@ export const GET: RequestHandler = async ({ locals, platform }) => {
 		.first();
 
 	if (profile === null) {
-		return json({ profile: null });
+		throw error(404, "Profile not found");
 	}
 
 	return json({ profile });
@@ -41,7 +41,7 @@ export const PUT: RequestHandler = async ({ locals, request, platform, fetch }) 
 
 	try {
 		await platform.env.D1.prepare(
-			"INSERT OR REPLACE INTO Profile VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
+			"INSERT OR REPLACE INTO Profile VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
 		)
 			.bind(
 				email,
@@ -56,7 +56,6 @@ export const PUT: RequestHandler = async ({ locals, request, platform, fetch }) 
 				profile.parent_name,
 				profile.parent_relation,
 				profile.parent_phone,
-				profile.travel_history,
 				profile.food_type,
 				profile.allergy_source,
 				profile.disease,
