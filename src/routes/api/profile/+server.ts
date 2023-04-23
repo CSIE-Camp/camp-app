@@ -25,7 +25,7 @@ export const GET: RequestHandler = async ({ locals, platform }) => {
 	return json({ profile });
 };
 
-export const PUT: RequestHandler = async ({ locals, request, platform, fetch }) => {
+export const PUT: RequestHandler = async ({ locals, request, platform }) => {
 	if (!locals.token) {
 		throw error(401, "Unauthorized");
 	}
