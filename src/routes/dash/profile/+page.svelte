@@ -69,7 +69,7 @@
 			placeholder: "父親、母親、兄弟、姊妹、...",
 		},
 		parent_phone: {
-			display: "緊急行動人行動電話",
+			display: "緊急連絡人行動電話",
 			value: "",
 			validate: (value) => ProfileSchema.shape.parent_phone.safeParse(value).success,
 			type: "tel",
@@ -125,7 +125,8 @@
 			value: "",
 			validate: (value) => ProfileSchema.shape.skill_experienced.safeParse(value).success,
 			type: "textarea",
-			placeholder: "HTML, JavaScript, Python, C++, TypeScript, Rust, Docker, ...",
+			placeholder:
+				"HTML, JavaScript, Python, C++, TypeScript, Rust, Docker, Machine Learning, ...",
 		},
 		skill_mastered: {
 			display: "論語法而言，「自認為」學過最「進階」的是？",

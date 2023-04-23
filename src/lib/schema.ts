@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { verify_pid, verify_fb, verify_birth } from "./verify";
 
 export const AuthRequest = z.object({
 	email: z.string().email().max(255),
@@ -17,11 +18,18 @@ export const ProfileSchema = z.object({
 	name: z.string().min(1).max(255),
 	gender: z.enum(["男", "女"]),
 	school: z.string().min(1).max(255),
-	birth: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-	personal_id: z.string().min(10).max(20),
+	birth: z
+		.string()
+		.regex(/^\d{4}-\d{2}-\d{2}$/)
+		.refine((birth) => verify_birth(birth)),
+	personal_id: z.string().refine((id) => verify_pid(id)),
 	phone: PhoneSchema,
 	blood_type: z.enum(["O", "A", "B", "AB", "不確定"]),
-	facebook: z.string().url().max(255),
+	facebook: z
+		.string()
+		.url()
+		.max(255)
+		.refine((fb) => verify_fb(fb)),
 	parent_name: z.string().min(1).max(255),
 	parent_relation: z.string().min(1).max(63),
 	parent_phone: PhoneSchema,
