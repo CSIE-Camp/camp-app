@@ -68,7 +68,7 @@
 		}).then(async (res) => {
 			if (res.ok) {
 				const json = await res.json<any>();
-				application.set(json.application);
+				$application = json || { created: null, updated: null, status: null };
 			}
 
 			return res;
@@ -99,7 +99,7 @@
 
 		if (res.ok) {
 			const json = await res.json<any>();
-			$application = json;
+			$application = json || { created: null, updated: null, status: null };
 		}
 
 		return res;

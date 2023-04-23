@@ -10,20 +10,20 @@ export const POST: RequestHandler = async ({ request }) => {
 	}
 
 	const { token } = await request.json<{ token: string }>();
-	const agent = request.headers.get("user-agent");
 	console.log(token);
 
 	const ok = await jwt.verify(token, env.APP_SECRET);
+	console.log({ ok });
 	if (!ok) {
 		throw error(401, "Invalid token");
 	}
 
 	try {
 		const payload = TokenSchema.parse(jwt.decode(token).payload);
-		console.log(payload, agent);
-		if (payload.agent !== agent) {
-			throw error(401, "Invalid token");
-		}
+		// console.log(payload, agent);
+		// if (payload.agent !== agent) {
+		// 	throw error(401, "Invalid token");
+		// }
 
 		return json({ ok, payload });
 	} catch {

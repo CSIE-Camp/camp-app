@@ -13,6 +13,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 	if (
 		!dev &&
 		!building &&
+		event.url.pathname.includes("/api") &&
 		(!event.request.headers.get("user-agent") ||
 			event.request.headers.get("cf-ipcountry") !== "TW")
 	) {
