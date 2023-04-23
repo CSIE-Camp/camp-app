@@ -1,0 +1,48 @@
+DROP TABLE IF EXISTS Profile;
+CREATE TABLE Profile (
+    email TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    gender TEXT NOT NULL,
+    school TEXT NOT NULL,
+    birth TEXT NOT NULL,
+    personal_id TEXT NOT NULL UNIQUE,
+    phone TEXT NOT NULL,
+    blood_type TEXT NOT NULL,
+    facebook TEXT NOT NULL UNIQUE,
+    parent_name TEXT NOT NULL,
+    parent_relation TEXT NOT NULL,
+    parent_phone TEXT NOT NULL,
+    travel_history TEXT NOT NULL,
+    food_type TEXT NOT NULL,
+    allergy_source TEXT NOT NULL,
+    disease TEXT NOT NULL,
+    clothes_size TEXT NOT NULL,
+    self_intro TEXT NOT NULL,
+    motivation TEXT NOT NULL,
+    skill_experienced TEXT NOT NULL,
+    skill_mastered TEXT NOT NULL
+);
+
+DROP TABLE IF EXISTS TaskProgress;
+CREATE TABLE TaskProgress (
+    email TEXT NOT NULL PRIMARY KEY,
+    -- 完成日期
+    profile TEXT,
+    -- 完成日期
+    avatar TEXT,
+    -- 完成日期
+    quiz TEXT,
+    -- GitHub 帳號
+    github TEXT
+);
+
+DROP TABLE IF EXISTS Application;
+CREATE TABLE Application (
+    email TEXT NOT NULL PRIMARY KEY,
+    -- 申請日期
+    created TEXT NOT NULL,
+    -- 更新日期
+    updated TEXT NOT NULL,
+    -- 申請狀態
+    status TEXT NOT NULL
+);

@@ -1,0 +1,7 @@
+name = "re-backend"
+compatibility_date = "2023-04-22"
+
+[[ d1_databases ]]
+binding = "D1"
+database_name = "camp-db"
+database_id = "4a503aa4-08f5-4768-815f-204f22e5722b"
