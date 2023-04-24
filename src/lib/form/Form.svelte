@@ -75,6 +75,7 @@
 			<select
 				id="{id}-{key}"
 				class="select-bordered select w-full transition-all"
+				class:select-error={!value.validate(value.value)}
 				bind:value={value.value}
 				on:change={() => save(key, value.value)}
 			>

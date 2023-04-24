@@ -14,7 +14,7 @@
 		},
 		gender: {
 			display: "性別",
-			value: "男",
+			value: "",
 			validate: (value) => ProfileSchema.shape.gender.safeParse(value).success,
 			options: ["男", "女"],
 		},
@@ -80,7 +80,7 @@
 	let others: Record<string, Field> = {
 		food_type: {
 			display: "飲食習慣",
-			value: "葷",
+			value: "",
 			validate: (value) => ProfileSchema.shape.food_type.safeParse(value).success,
 			options: ["葷", "素"],
 		},
@@ -96,7 +96,7 @@
 		},
 		clothes_size: {
 			display: "衣服尺寸",
-			value: "M",
+			value: "",
 			validate: (value) => ProfileSchema.shape.clothes_size.safeParse(value).success,
 			options: ["SS", "S", "M", "L", "XL", "2L", "3L", "4L", "5L", "6L"],
 			image: "https://i.imgur.com/wcB2Fov.png",
