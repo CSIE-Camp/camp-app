@@ -3,8 +3,9 @@ export function verify_pid(id: string): boolean {
 		return false;
 	}
 
+	const letters = "ABCDEFGHJKLMNPQRSTUVXYWZIO";
 	const weights = [1, 9, 8, 7, 6, 5, 4, 3, 2, 1, 1];
-	const nums = String(10 + id.charCodeAt(0) - 65) + id.substring(1);
+	const nums = String(10 + letters.indexOf(id.charAt(0))) + id.substring(1);
 
 	let sum = 0;
 	for (let i = 0; i < nums.length; i++) {
