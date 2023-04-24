@@ -137,6 +137,13 @@
 		},
 	};
 
+	$: bad_fields = [
+		...Object.values(basics),
+		...Object.values(emergency),
+		...Object.values(others),
+		...Object.values(about),
+	].filter((field) => !field.validate(field.value));
+
 	let canvas: HTMLCanvasElement;
 	let files: FileList;
 	let remote_image = false;
@@ -186,33 +193,45 @@
 		}
 	}
 
+	let saving = false;
 	async function save() {
-		const data = Object.entries({
-			...basics,
-			...emergency,
-			...others,
-			...about,
-		}).reduce((acc, [key, value]) => {
-			acc[key] = value.value;
-			return acc;
-		}, {} as Record<string, string>);
+		if (saving) {
+			return;
+		}
+		saving = true;
 
-		const profile = ProfileSchema.parse(data);
+		try {
+			const data = Object.entries({
+				...basics,
+				...emergency,
+				...others,
+				...about,
+			}).reduce((acc, [key, value]) => {
+				acc[key] = value.value;
+				return acc;
+			}, {} as Record<string, string>);
 
-		const res = await fetch("/api/profile", {
-			method: "PUT",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: `Bearer ${$token}`,
-			},
-			body: JSON.stringify(profile),
-		});
+			const profile = ProfileSchema.parse(data);
 
-		if (res.ok) {
-			alert("儲存成功");
-			await goto("/dash");
-		} else {
-			alert("儲存失敗");
+			const res = await fetch("/api/profile", {
+				method: "PUT",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${$token}`,
+				},
+				body: JSON.stringify(profile),
+			});
+
+			if (res.ok) {
+				alert("儲存成功");
+				await goto("/dash");
+			} else {
+				alert("儲存失敗");
+			}
+		} catch (err) {
+			console.error(err);
+		} finally {
+			saving = false;
 		}
 	}
 
@@ -306,6 +325,18 @@
 		<Form bind:form={about} />
 		<div class="divider" />
 
-		<button class="btn-primary btn" on:click={save}>儲存</button>
+		<button class="btn-primary btn" on:click={save} disabled={!!bad_fields.length || saving}>
+			儲存
+		</button>
+		{#if bad_fields.length}
+			<div class="text-warning">
+				請檢查以下欄位：
+				<ul class="ml-4 list-disc">
+					{#each bad_fields as field}
+						<li><a href="#label-{field.display}">{field.display}</a></li>
+					{/each}
+				</ul>
+			</div>
+		{/if}
 	</div>
 </div>

@@ -42,3 +42,12 @@ export function store<T>(key: string, init: T): Writable<T> {
 	cached.set(key, store);
 	return store;
 }
+
+export function get<T>(key: string): T | undefined {
+	const item = localStorage.getItem(`store::${key}`);
+	if (item) {
+		return JSON.parse(item);
+	}
+
+	return undefined;
+}
