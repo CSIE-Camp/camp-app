@@ -6,26 +6,29 @@
 
 	let questions: Record<string, Field> = {
 		q1: {
-			display: "營隊舉辦的日期是哪時候呢？（請參閱報名資訊）",
+			display: "營隊舉辦的日期是哪時候呢？",
+			markdown: "（請參閱[報名資訊](https://camp.csie.cool/info)）",
 			value: "",
 			validate: () => true,
 			options: ["7/3 ~ 7/6", "7/3 ~ 7/7", "7/4 ~ 7/7"],
 		},
 		q2: {
-			display: "報名費用原價為多少新台幣呢？（請參閱報名資訊）",
+			display: "報名費用原價為多少新台幣呢？",
+			markdown: "（請參閱[報名資訊](https://camp.csie.cool/info)）",
 			value: "",
 			validate: () => true,
 			options: ["7900", "8900", "9900", "18900"],
 		},
 		q3: {
-			display: "下列哪項「不是」你在營隊會學到的東西？（請參閱營隊介紹）",
+			display: "下列哪項「不是」你在營隊會學到的東西？",
+			markdown: "（請參閱[營隊介紹](https://camp.csie.cool/about)）",
 			value: "",
 			validate: () => true,
 			options: ["製作網頁", "資訊安全與密碼學", "製作 Discord Bot", "製作虛擬實境遊戲"],
 		},
 		q4: {
-			display:
-				"營隊的住宿地點（旅居文旅-台北松山機場館）每房「沒有」什麼設施呢？（請參閱報名資訊）",
+			display: "營隊的住宿地點（旅居文旅-台北松山機場館）每房「沒有」什麼設施呢？",
+			markdown: "（請參閱[報名資訊](https://camp.csie.cool/info)）",
 			value: "",
 			validate: () => true,
 			options: [
@@ -39,6 +42,15 @@
 				"戶外游泳池",
 			],
 		},
+		q5: {
+			display: "請問以下程式碼中 d 的值為何？",
+			markdown:
+				"（參考 [let](https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Statements/let)、[jsconsole](https://jsconsole.com/)、[JavaScript 初探](https://developer.mozilla.org/zh-TW/docs/Learn/JavaScript/First_steps)）",
+			image: "https://i.imgur.com/TJv69iQ.png",
+			value: "",
+			validate: () => true,
+			options: ["0", "10", "20", "30", "40", "50"],
+		},
 	};
 
 	const ans: Record<string, string> = {
@@ -46,6 +58,7 @@
 		q2: "8900",
 		q3: "製作虛擬實境遊戲",
 		q4: "戶外游泳池",
+		q5: "40",
 	};
 
 	async function check() {
@@ -93,7 +106,7 @@
 			<a href="/dash" class="btn-link btn no-underline">返回儀表板</a>
 		</div>
 
-		<Form bind:form={questions} />
+		<Form bind:form={questions} cache={false} />
 
 		<div class="divider" />
 

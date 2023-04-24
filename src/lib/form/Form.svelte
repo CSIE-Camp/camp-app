@@ -3,6 +3,8 @@
 	import type { Field } from "$lib/field";
 	import { store, get } from "$lib/store";
 	import { onMount } from "svelte";
+	import Markdown from "svelte-markdown";
+	import Link from "./Link.svelte";
 
 	export let form: Record<string, Field>;
 	export let cache: false | "cache-first" | "value-first" = "cache-first";
@@ -43,6 +45,11 @@
 		<label class="label" for="{id}-{key}" id="label-{value.display}">
 			{value.display}
 		</label>
+		{#if value.markdown}
+			<div class="prose mb-2">
+				<Markdown source={value.markdown} renderers={{ link: Link }} />
+			</div>
+		{/if}
 		{#if value.image}
 			<a class="contents" href={value.image} target="_blank">
 				<img class="mb-4 w-full max-w-md rounded-lg" src={value.image} alt={value.image} />

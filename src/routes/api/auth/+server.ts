@@ -52,7 +52,7 @@ export const POST: RequestHandler = async ({ url, request }) => {
 					main: "師大資工營報名登入",
 					body: "請使用下方專屬魔法連結登入報名系統（此連結僅授權在相同裝置及瀏覽器上登入）",
 					link: `登入,${origin}/auth?token=${encodeURIComponent(token)}`,
-					footer: "網站,https://camp.csie.cool;Discord,https://discord.gg/X5afNNcm",
+					footer: "官方網站,https://camp.csie.cool;Instagram,https://www.instagram.com/ntnucsiecamp2023/;Facebook,https://www.facebook.com/ntnucsiecamp",
 				},
 			},
 		}),

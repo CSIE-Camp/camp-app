@@ -97,6 +97,9 @@ devDependencies:
     svelte-i18n:
         specifier: ^3.6.0
         version: 3.6.0(svelte@3.58.0)
+    svelte-markdown:
+        specifier: ^0.2.3
+        version: 0.2.3(svelte@3.58.0)
     tailwindcss:
         specifier: ^3.3.1
         version: 3.3.1(postcss@8.4.23)
@@ -2581,6 +2584,13 @@ packages:
         resolution:
             {
                 integrity: sha512-ssE3Vlrys7sdIzs5LOxCzTVMsU7i9oa/IaW92wF32JFb3CVczqOkru2xspuKczHEbG3nvmPY7IFqVmGGHdNbYw==,
+            }
+        dev: true
+
+    /@types/marked@4.0.8:
+        resolution:
+            {
+                integrity: sha512-HVNzMT5QlWCOdeuBsgXP8EZzKUf0+AXzN+sLmjvaB3ZlLqO+e4u0uXrdw9ub69wBKFs+c6/pA4r9sy6cCDvImw==,
             }
         dev: true
 
@@ -5819,6 +5829,15 @@ packages:
         engines: { node: ">=8" }
         dev: true
 
+    /marked@4.3.0:
+        resolution:
+            {
+                integrity: sha512-PRsaiG84bK+AMvxziE/lCFss8juXjNaWzVbN5tXAm4XjeaS9NAHhop+PjQxz2A9h8Q4M/xGmzP8vqNwy6JeK0A==,
+            }
+        engines: { node: ">= 12" }
+        hasBin: true
+        dev: true
+
     /md5-hex@3.0.1:
         resolution:
             {
@@ -7732,6 +7751,19 @@ packages:
             sade: 1.8.1
             svelte: 3.58.0
             tiny-glob: 0.2.9
+        dev: true
+
+    /svelte-markdown@0.2.3(svelte@3.58.0):
+        resolution:
+            {
+                integrity: sha512-2h680NzTXnAD0CXhxe3GeHl6W+ayG4iKQRl+BIDRw+R0mUE0OiNxP1Vt8Rn+aWevB/LBiBIPCAwvL+0BkG057A==,
+            }
+        peerDependencies:
+            svelte: ^3.0.0
+        dependencies:
+            "@types/marked": 4.0.8
+            marked: 4.3.0
+            svelte: 3.58.0
         dev: true
 
     /svelte-preprocess@5.0.3(postcss@8.4.23)(svelte@3.58.0)(typescript@5.0.4):
