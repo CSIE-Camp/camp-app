@@ -22,6 +22,7 @@
 			display: "學校",
 			value: "",
 			validate: (value) => ProfileSchema.shape.school.safeParse(value).success,
+			placeholder: "國立臺灣師範大學附屬高級中學",
 		},
 		birth: {
 			display: "出生日期",
@@ -33,6 +34,7 @@
 			display: "身分證字號",
 			value: "",
 			validate: (value) => ProfileSchema.shape.personal_id.safeParse(value).success,
+			placeholder: "A123456789",
 		},
 		phone: {
 			display: "手機號碼",
