@@ -2,10 +2,10 @@ import { defineConfig } from "vitest/config";
 import { sentryVitePlugin } from "@sentry/vite-plugin";
 import { sveltekit } from "@sveltejs/kit/vite";
 
-export default defineConfig({
-	plugins: [
-		sveltekit(),
-		// Put the Sentry vite plugin after all other plugins
+const plugins = [sveltekit()];
+
+if (process.env.SENTRY_AUTH_TOKEN) {
+	plugins.push(
 		sentryVitePlugin({
 			org: "jacoblincool",
 			project: "camp-app",
@@ -19,7 +19,11 @@ export default defineConfig({
 				assets: "./.svelte-kit/output/client/**",
 			},
 		}),
-	],
+	);
+}
+
+export default defineConfig({
+	plugins,
 	test: {
 		include: ["src/**/*.{test,spec}.{js,ts}"],
 	},
