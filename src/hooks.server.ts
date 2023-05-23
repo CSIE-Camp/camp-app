@@ -1,8 +1,10 @@
-import { building, dev } from "$app/environment";
+import { env } from "$env/dynamic/private";
+import { ALLOWED_ORIGINS } from "$lib/config";
 import { TokenSchema } from "$lib/schema";
+import { check_access } from "$lib/server/guard";
 import { locale, waitLocale } from "svelte-i18n";
 import { ZodError } from "zod";
-import { error, type Handle } from "@sveltejs/kit";
+import { error, type Handle, type RequestEvent } from "@sveltejs/kit";
 import jwt from "@tsndr/cloudflare-worker-jwt";
 
 export const handle: Handle = async ({ event, resolve }) => {
@@ -10,55 +12,19 @@ export const handle: Handle = async ({ event, resolve }) => {
 	locale.set(lang);
 	await waitLocale();
 
-	if (
-		!dev &&
-		!building &&
-		event.url.pathname.includes("/api") &&
-		(!event.request.headers.get("user-agent") ||
-			event.request.headers.get("cf-ipcountry") !== "TW")
-	) {
-		console.log(Object.fromEntries(event.request.headers.entries()));
-		throw error(400, "Bad Request");
-	}
+	await set_token(event);
+	check_access(event);
 
 	if (event.request.method === "OPTIONS") {
-		return new Response(null, {
-			status: 200,
-			headers: {
-				"Access-Control-Allow-Origin": event.request.headers.get("origin") || "",
-				"Access-Control-Allow-Credentials": "true",
-				"Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-				"Access-Control-Allow-Headers": "Content-Type, Authorization",
-			},
-		});
-	}
-
-	const authorization = event.request.headers.get("authorization");
-	if (authorization) {
-		const [type, token] = authorization.split(" ");
-		if (type === "Bearer") {
-			event.locals.token = TokenSchema.parse(jwt.decode(token).payload);
-		}
+		const res = new Response(null);
+		add_cors_headers(res, event.request.headers.get("origin") || "*");
+		return res;
 	}
 
 	try {
 		const result = await resolve(event);
 
-		const list = new Set([
-			"https://camp.csie.cool",
-			"https://camp-dev.csie.cool",
-			"http://localhost:3000",
-		]);
-
-		if (list.has(event.request.headers.get("origin") || "")) {
-			result.headers.set(
-				"Access-Control-Allow-Origin",
-				event.request.headers.get("origin") || "",
-			);
-			result.headers.set("Access-Control-Allow-Credentials", "true");
-			result.headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-			result.headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
-		}
+		add_cors_headers(result, event.request.headers.get("origin") || "*");
 
 		return result;
 	} catch (err) {
@@ -68,3 +34,37 @@ export const handle: Handle = async ({ event, resolve }) => {
 		throw err;
 	}
 };
+
+function add_cors_headers(response: Response, origin: string) {
+	const list = new Set(ALLOWED_ORIGINS);
+	if (list.has(origin)) {
+		response.headers.set("Access-Control-Allow-Origin", origin);
+		response.headers.set("Access-Control-Allow-Credentials", "true");
+		response.headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+		response.headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
+	}
+}
+
+async function set_token(event: RequestEvent) {
+	const authorization = event.request.headers.get("authorization");
+	const cookie = event.cookies.get("token");
+
+	if (authorization) {
+		console.log("Found token in authorization header");
+		const [type, token] = authorization.split(" ");
+		if (type === "Bearer") {
+			const ok = await jwt.verify(token, env.APP_SECRET);
+			if (ok) {
+				event.locals.token = TokenSchema.parse(jwt.decode(token).payload);
+			}
+		}
+	} else if (cookie) {
+		console.log("Found token in cookie");
+		const ok = await jwt.verify(cookie, env.APP_SECRET);
+		if (ok) {
+			event.locals.token = TokenSchema.parse(jwt.decode(cookie).payload);
+		}
+	} else {
+		console.log("No token found");
+	}
+}
