@@ -1,5 +1,6 @@
 import { TaskSchema } from "$lib/schema";
 import { complete, status, selfchecks } from "$lib/server/task";
+import { is_allowed_time } from "$lib/time-check";
 import { error, json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 
@@ -26,6 +27,10 @@ export const PUT: RequestHandler = async ({ locals, request, platform }) => {
 
 	if (!platform?.env.D1) {
 		throw error(500, "D1 not available");
+	}
+
+	if (!is_allowed_time()) {
+		throw error(403, "Forbidden");
 	}
 
 	const body = TaskSchema.parse(await request.json());

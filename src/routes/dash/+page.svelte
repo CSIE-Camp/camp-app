@@ -5,6 +5,8 @@
 	import { fade } from "svelte/transition";
 	import Icon from "@iconify/svelte";
 
+	let disabled = new Date() > new Date("2023-05-27T00:00:00+08:00");
+
 	$: tasks = [
 		{
 			title: "填‍寫‍個‍人資‍料",
@@ -160,6 +162,7 @@
 							class="btn-outline btn mt-2 w-full p-2"
 							class:hidden={!(task.done ? task.redo : task.action)}
 							on:click={task.done ? task.redo : task.action}
+							{disabled}
 						>
 							{task.done ? "編輯" : "立即完成"}
 						</button>
@@ -188,6 +191,7 @@
 					class:btn-success={!$application.status}
 					class:btn-error={$application.status}
 					on:click={!$application.status ? apply : cancel}
+					{disabled}
 				>
 					{!$application.status ? "申請報名" : "取消報名"}
 				</button>

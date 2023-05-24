@@ -43,6 +43,9 @@ devDependencies:
     "@types/debug":
         specifier: ^4.1.7
         version: 4.1.7
+    "@types/pangu":
+        specifier: ^4.0.0
+        version: 4.0.0
     "@typescript-eslint/eslint-plugin":
         specifier: ^5.59.0
         version: 5.59.0(@typescript-eslint/parser@5.59.0)(eslint@8.38.0)(typescript@5.0.4)
@@ -70,12 +73,21 @@ devDependencies:
     husky:
         specifier: ^8.0.3
         version: 8.0.3
+    kysely:
+        specifier: ^0.24.2
+        version: 0.24.2
+    kysely-d1:
+        specifier: ^0.3.0
+        version: 0.3.0(kysely@0.24.2)
     lint-staged:
         specifier: ^13.2.1
         version: 13.2.1
     octokit:
         specifier: ^2.0.14
         version: 2.0.14
+    pangu:
+        specifier: ^4.0.7
+        version: 4.0.7
     postcss:
         specifier: ^8.4.23
         version: 8.4.23
@@ -2626,6 +2638,13 @@ packages:
         resolution:
             {
                 integrity: sha512-Gj7cI7z+98M282Tqmp2K5EIsoouUEzbBJhQQzDE3jSIRk6r9gsz0oUokqIUR4u1R3dMHo0pDHM7sNOHyhulypw==,
+            }
+        dev: true
+
+    /@types/pangu@4.0.0:
+        resolution:
+            {
+                integrity: sha512-da3b6P7QDH41VdfF2xRE8/KgL06nX3RawfiIMAvJ/sYzLWQCQtxc+B3qWVtrIlrNlSgV/e1oG2SZYUpN6gvmhQ==,
             }
         dev: true
 
@@ -5540,6 +5559,25 @@ packages:
         engines: { node: ">=6" }
         dev: true
 
+    /kysely-d1@0.3.0(kysely@0.24.2):
+        resolution:
+            {
+                integrity: sha512-9wTbE6ooLiYtBa4wPg9e4fjfcmvRtgE/2j9pAjYrIq+iz+EsH/Hj9YbtxpEXA6JoRgfulVQ1EtGj6aycGGRpYw==,
+            }
+        peerDependencies:
+            kysely: "*"
+        dependencies:
+            kysely: 0.24.2
+        dev: true
+
+    /kysely@0.24.2:
+        resolution:
+            {
+                integrity: sha512-+7eaTJNUYm2yRq1x+lEOZc+78TO35dTZ9b0dh49+Z9CTt2byMSbMiOKpwPlOyCAaHD4kILkAYWYZNywFlmBwRA==,
+            }
+        engines: { node: ">=14.0.0" }
+        dev: true
+
     /levn@0.4.1:
         resolution:
             {
@@ -6430,6 +6468,14 @@ packages:
                 integrity: sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==,
             }
         engines: { node: ">=6" }
+        dev: true
+
+    /pangu@4.0.7:
+        resolution:
+            {
+                integrity: sha512-weZKJIwwy5gjt4STGVUH9bix3BGk7wZ2ahtIypwe3e/mllsrIZIvtfLx1dPX56GcpZFOCFKmeqI1qVuB9enRzA==,
+            }
+        hasBin: true
         dev: true
 
     /parent-module@1.0.1:

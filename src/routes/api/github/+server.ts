@@ -1,4 +1,5 @@
 import { complete } from "$lib/server/task";
+import { is_allowed_time } from "$lib/time-check";
 import { error, json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 
@@ -13,6 +14,10 @@ export const POST: RequestHandler = async ({ locals, platform, request }) => {
 
 	if (!platform.env.GH_CLIENT_ID || !platform.env.GH_CLIENT_SECRET) {
 		throw error(500, "GH_CLIENT_ID or GH_CLIENT_SECRET not available");
+	}
+
+	if (!is_allowed_time()) {
+		throw error(403, "Forbidden");
 	}
 
 	const { email } = locals.token;
