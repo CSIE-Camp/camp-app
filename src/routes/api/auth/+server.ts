@@ -1,5 +1,5 @@
 import { env } from "$env/dynamic/private";
-import { TOKEN_EXPIRY } from "$lib/constants";
+import { TOKEN_EXPIRY } from "$lib/config";
 import { AuthRequest, TokenSchema } from "$lib/schema";
 import { error, json } from "@sveltejs/kit";
 import jwt from "@tsndr/cloudflare-worker-jwt";
