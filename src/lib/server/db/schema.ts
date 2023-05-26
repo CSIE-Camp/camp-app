@@ -36,8 +36,15 @@ export interface TaskProgress {
 	github: string;
 }
 
+export interface Voting {
+	email: string;
+	target: string;
+	vote: number;
+}
+
 export interface Database {
 	Application: Application;
 	Profile: Profile;
 	TaskProgress: TaskProgress;
+	Voting: Voting;
 }

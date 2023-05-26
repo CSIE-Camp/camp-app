@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { hash } from "$lib/hash";
 	import { spacing } from "pangu";
+	import Icon from "@iconify/svelte";
 	import type { PageData } from "./$types";
 
 	export let data: PageData;
@@ -15,6 +16,38 @@
 	}, {} as Record<string, typeof apps>);
 
 	$: group = Object.keys(groups || [])[0];
+
+	let voting = false;
+	async function vote(target: string, choice: number) {
+		if (voting) {
+			return;
+		}
+		voting = true;
+
+		try {
+			const res = await fetch("/admin/vote", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ target, choice }),
+			});
+
+			if (!res.ok) {
+				alert("投票失敗");
+				console.error("投票失敗", await res.text());
+			}
+
+			data.applications.map((app) => {
+				if (app.email === target) {
+					app.vote = choice;
+				}
+				return app;
+			});
+		} finally {
+			voting = false;
+		}
+	}
 </script>
 
 <svelte:head>
@@ -54,7 +87,7 @@
 
 		{#if groups[group]}
 			<div class="carousel w-full p-4">
-				{#each groups[group] as app}
+				{#each groups[group] as app (`${app.email}-${app.vote}`)}
 					{#await hash(app.email) then bucket}
 						<div class="carousel-item w-full">
 							<div class="hero">
@@ -80,6 +113,35 @@
 										</p>
 										<div class="rounded-lg border border-primary p-4">
 											{app.status}
+										</div>
+										<div class="flex gap-2 p-4">
+											<button
+												class="btn-square btn"
+												class:btn-outline={app.vote !== 1}
+												class:btn-primary={app.vote === 1}
+												on:click={() => vote(app.email, 1)}
+												disabled={voting}
+											>
+												<Icon icon="mdi:thumb-up" />
+											</button>
+											<button
+												class="btn-outline btn-square btn"
+												class:btn-outline={app.vote !== 0}
+												class:btn-primary={app.vote === 0}
+												on:click={() => vote(app.email, 0)}
+												disabled={voting}
+											>
+												<Icon icon="mdi:circle-outline" />
+											</button>
+											<button
+												class="btn-outline btn-square btn"
+												class:btn-outline={app.vote !== -1}
+												class:btn-primary={app.vote === -1}
+												on:click={() => vote(app.email, -1)}
+												disabled={voting}
+											>
+												<Icon icon="mdi:thumb-down" />
+											</button>
 										</div>
 									</div>
 								</div>

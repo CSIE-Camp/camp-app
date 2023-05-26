@@ -1,9 +1,9 @@
 import { env } from "$env/dynamic/private";
 import { D1 } from "$lib/server/db";
-import { redirect } from "@sveltejs/kit";
-import type { LayoutServerLoad } from "./$types";
+import { json, redirect } from "@sveltejs/kit";
+import type { RequestHandler } from "./$types";
 
-export const load: LayoutServerLoad = async ({ locals, platform }) => {
+export const POST: RequestHandler = async ({ locals, platform, request }) => {
 	if (!locals.token) {
 		console.log("Someone is trying to access admin page without token");
 		throw redirect(302, "/login");
@@ -22,22 +22,22 @@ export const load: LayoutServerLoad = async ({ locals, platform }) => {
 		throw redirect(302, "/login");
 	}
 
+	const { target, choice } = await request.json<{
+		target: string;
+		choice: number;
+	}>();
+
 	const db = new D1(platform);
 
-	const applications = await db
-		.selectFrom("Application")
-		.innerJoin("Profile", "Application.email", "Profile.email")
-		.leftJoin(
-			db
-				.selectFrom("Voting")
-				.where("email", "=", locals.token.email)
-				.select(["Voting.target", "Voting.vote"])
-				.as("V"),
-			"Application.email",
-			"V.target",
-		)
-		.selectAll()
+	await db
+		.insertInto("Voting")
+		.values({
+			email: locals.token.email,
+			target,
+			vote: choice,
+		})
+		.onConflict((oc) => oc.columns(["email", "target"]).doUpdateSet({ vote: choice }))
 		.execute();
 
-	return { applications };
+	return json({ status: "ok" });
 };
