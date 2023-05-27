@@ -60,7 +60,7 @@
 	<div class="flex min-h-full w-full flex-col items-center">
 		<h1 class="mb-2 p-6 text-3xl">管理中心</h1>
 
-		<div class="stats shadow">
+		<div class="stats h-40 shadow">
 			<div class="stat place-items-end">
 				<div class="stat-title">報名人數</div>
 				<div class="stat-value text-primary">{apps.length}</div>

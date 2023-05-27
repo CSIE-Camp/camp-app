@@ -2,7 +2,7 @@ import { env } from "$env/dynamic/private";
 import { error, redirect } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 
-export const GET: RequestHandler = async ({ locals, params, platform }) => {
+export const GET: RequestHandler = async ({ locals, params, platform, url }) => {
 	if (!locals.token) {
 		console.log("Someone is trying to access admin page without token");
 		throw redirect(302, "/login");
@@ -28,6 +28,15 @@ export const GET: RequestHandler = async ({ locals, params, platform }) => {
 	const bucket = params.hash;
 	const file = params.file;
 
+	const cache = await platform.caches.open("r2-cache");
+	const cache_key = url.href + "?__cache__";
+	console.log("cache key", cache_key);
+	const cached = await cache.match(cache_key);
+	if (cached) {
+		console.log("cache hit", cache_key);
+		return cached;
+	}
+
 	const object = await platform.env.R2.get(`users/${bucket}/${file}`);
 	if (!object) {
 		throw error(404, "Not found");
@@ -36,6 +45,11 @@ export const GET: RequestHandler = async ({ locals, params, platform }) => {
 	const headers = new Headers();
 	object.writeHttpMetadata(headers);
 	headers.set("etag", object.httpEtag);
+	headers.set("cache-control", "s-maxage=14400");
 
-	return new Response(object.body, { headers });
+	const res = new Response(object.body, { headers });
+
+	platform.context.waitUntil(cache.put(cache_key, res.clone()));
+
+	return res;
 };

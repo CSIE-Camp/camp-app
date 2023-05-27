@@ -20,6 +20,8 @@ declare global {
 				GH_CLIENT_ID: string;
 				GH_CLIENT_SECRET: string;
 			};
+			caches: CacheStorage;
+			context: EventContext;
 		}
 	}
 }

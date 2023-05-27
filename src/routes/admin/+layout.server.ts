@@ -36,6 +36,7 @@ export const load: LayoutServerLoad = async ({ locals, platform }) => {
 			"Application.email",
 			"V.target",
 		)
+		.orderBy("Application.created", "desc")
 		.selectAll()
 		.execute();
 
