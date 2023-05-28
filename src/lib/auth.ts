@@ -10,11 +10,6 @@ export const task = store<Record<z.infer<typeof TaskSchema>["task"], string | nu
 	quiz: null,
 	github: null,
 });
-export const application = store<{
-	created: string | null;
-	updated: string | null;
-	status: string | null;
-}>("application", { created: null, updated: null, status: null });
 
 token.subscribe((jwt) => {
 	if (jwt) {

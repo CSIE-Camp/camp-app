@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto, invalidateAll } from "$app/navigation";
-	import { token, email, task, application } from "$lib/auth";
+	import { token, email, task } from "$lib/auth";
 	import { onMount } from "svelte";
 	// @ts-expect-error
 	import { Confetti } from "svelte-confetti";
@@ -10,6 +10,11 @@
 
 	export let data: PageData;
 	const has_payment = !!data.payment.account;
+	$: application = {
+		created: null as string | null,
+		updated: null as string | null,
+		status: null as string | null,
+	};
 
 	$: tasks = [
 		{
@@ -50,7 +55,7 @@
 		fetch("/api/application").then(async (res) => {
 			if (res.ok) {
 				const json = await res.json<any>();
-				$application = json || { created: null, updated: null, status: null };
+				application = json || { created: null, updated: null, status: null };
 			}
 
 			return res;
@@ -81,14 +86,14 @@
 
 		if (res.ok) {
 			const json = await res.json<any>();
-			$application = json || { created: null, updated: null, status: null };
+			application = json || { created: null, updated: null, status: null };
 		}
 
 		return res;
 	}
 
 	async function cancel() {
-		if (!$application.status?.includes("已受理")) {
+		if (!application.status?.includes("已受理")) {
 			const confirmed = confirm("確定要放棄錄取嗎？這個動作無法復原喔！");
 			if (!confirmed) {
 				return;
@@ -163,7 +168,7 @@
 	/>
 </svelte:head>
 
-{#if $application.status?.includes("錄取")}
+{#if application.status?.includes("錄取")}
 	<div class="pointer-events-none fixed -top-12 left-0 z-10 flex h-full w-full justify-center">
 		<Confetti
 			x={[-5, 5]}
@@ -184,36 +189,36 @@
 			{#if $task.profile && $task.avatar && $task.quiz && $task.github}
 				<div class="divider" />
 				<h2 class="text-lg md:text-xl">報名申請狀態</h2>
-				<p class="text-sm opacity-60">報名資格審查進行中</p>
+				<p class="text-sm opacity-60">第一階段報名審查已完成</p>
 
-				{#if $application.status}
+				{#if application.status}
 					<div
 						class="text-3xl"
-						class:text-info={$application.status?.includes("已受理")}
-						class:text-success={$application.status?.includes("錄取")}
-						class:text-warning={$application.status?.includes("備取")}
+						class:text-info={application.status?.includes("已受理")}
+						class:text-success={application.status?.includes("錄取")}
+						class:text-warning={application.status?.includes("備取")}
 					>
-						{$application.status}
+						{application.status}
 					</div>
 				{/if}
 
-				{#if $application.status ? data.control.can_give_up : data.control.can_apply}
+				{#if application.status ? data.control.can_give_up : data.control.can_apply}
 					<button
 						class="btn-outline btn mt-2 w-full"
-						class:btn-success={!$application.status}
-						class:btn-error={$application.status}
-						on:click={!$application.status ? apply : cancel}
+						class:btn-success={!application.status}
+						class:btn-error={application.status}
+						on:click={!application.status ? apply : cancel}
 					>
-						{!$application.status
+						{!application.status
 							? "申請報名"
-							: $application.status?.includes("已受理")
+							: application.status?.includes("已受理")
 							? "取消報名"
 							: "放棄錄取"}
 					</button>
 				{/if}
 			{/if}
 
-			{#if data.control.can_update_additional_info}
+			{#if application.status?.includes("錄取") && data.control.can_update_additional_info}
 				<div class="divider" />
 				<h2 class="text-lg md:text-xl">繳費資料與家長同意書</h2>
 				<p class="text-sm opacity-60">
