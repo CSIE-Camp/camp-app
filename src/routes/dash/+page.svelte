@@ -131,6 +131,7 @@
 				await invalidateAll();
 			} else {
 				upload_status = "上傳失敗";
+				alert("上傳失敗，請稍後再試。如果持續發生問題，請聯絡我們。");
 			}
 		} finally {
 			uploading = false;
@@ -153,6 +154,8 @@
 
 			if (res.ok) {
 				await invalidateAll();
+			} else {
+				alert("更新失敗，請稍後再試。如果持續發生問題，請聯絡我們。");
 			}
 		} finally {
 			uploading = false;
