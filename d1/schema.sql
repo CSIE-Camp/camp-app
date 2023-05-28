@@ -45,3 +45,24 @@ CREATE TABLE Application (
     -- 申請狀態
     status TEXT NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS UserControl (
+    email TEXT NOT NULL PRIMARY KEY,
+    can_update_profile BOOL NOT NULL DEFAULT FALSE,
+    can_apply BOOL NOT NULL DEFAULT FALSE,
+    can_give_up BOOL NOT NULL DEFAULT FALSE,
+    can_update_additional_info BOOL NOT NULL DEFAULT FALSE,
+);
+
+CREATE TABLE IF NOT EXISTS Attachment (
+    email TEXT NOT NULL,
+    file TEXT NOT NULL,
+    time TEXT NOT NULL,
+    PRIMARY KEY (email, file)
+);
+
+CREATE TABLE IF NOT EXISTS Payment (
+    email TEXT NOT NULL PRIMARY KEY,
+    account TEXT NOT NULL,
+    time TEXT NOT NULL,
+);

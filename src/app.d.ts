@@ -1,5 +1,6 @@
 /// <reference types="@cloudflare/workers-types" />
 import { TokenSchema } from "$lib/schema";
+import { UserControl } from "$lib/server/db/schema";
 import type { z } from "zod";
 
 // See https://kit.svelte.dev/docs/types#app
@@ -9,6 +10,7 @@ declare global {
 		// interface Error {}
 		interface Locals {
 			token?: z.infer<typeof TokenSchema>;
+			control?: UserControl;
 		}
 		// interface PageData {}
 		interface Platform {

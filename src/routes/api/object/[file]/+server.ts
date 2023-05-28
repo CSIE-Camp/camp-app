@@ -1,10 +1,11 @@
 import { hash } from "$lib/hash";
+import { deleted, uploaded } from "$lib/server/db/attachment";
+import { check_control } from "$lib/server/db/control";
 import { complete } from "$lib/server/task";
-import { is_allowed_time } from "$lib/time-check";
 import { error, json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 
-const allowed = new Set(["profile.jpg"]);
+const allowed = new Set(["profile.jpg", "consent.pdf"]);
 
 export const GET: RequestHandler = async ({ locals, params, platform }) => {
 	if (!locals.token) {
@@ -30,11 +31,12 @@ export const GET: RequestHandler = async ({ locals, params, platform }) => {
 	const headers = new Headers();
 	object.writeHttpMetadata(headers);
 	headers.set("etag", object.httpEtag);
+	headers.set("cache-control", "private");
 
 	return new Response(object.body, { headers });
 };
 
-export const PUT: RequestHandler = async ({ locals, params, request, platform, fetch }) => {
+export const PUT: RequestHandler = async ({ locals, params, request, platform }) => {
 	if (!locals.token) {
 		throw error(401, "Unauthorized");
 	}
@@ -43,14 +45,20 @@ export const PUT: RequestHandler = async ({ locals, params, request, platform, f
 		throw error(500, "R2 not available");
 	}
 
-	if (!is_allowed_time()) {
-		throw error(403, "Forbidden");
-	}
+	const control = await check_control(platform, locals.token.email);
 
 	const bucket = await hash(locals.token.email);
 	const file = params.file;
 
 	if (!allowed.has(file)) {
+		throw error(403, "Forbidden");
+	}
+
+	if (file === "profile.jpg" && !control.can_update_profile) {
+		throw error(403, "Forbidden");
+	}
+
+	if (file === "consent.pdf" && !control.can_update_additional_info) {
 		throw error(403, "Forbidden");
 	}
 
@@ -66,6 +74,41 @@ export const PUT: RequestHandler = async ({ locals, params, request, platform, f
 	if (file === "profile.jpg") {
 		await complete("avatar", locals.token.email, platform);
 	}
+
+	await uploaded(platform, locals.token.email, file);
+
+	return json({ ok: true });
+};
+
+export const DELETE: RequestHandler = async ({ locals, params, platform }) => {
+	if (!locals.token) {
+		throw error(401, "Unauthorized");
+	}
+
+	if (!platform?.env.R2) {
+		throw error(500, "R2 not available");
+	}
+
+	const control = await check_control(platform, locals.token.email);
+
+	const bucket = await hash(locals.token.email);
+	const file = params.file;
+
+	if (!allowed.has(file)) {
+		throw error(403, "Forbidden");
+	}
+
+	if (file === "profile.jpg" && !control.can_update_profile) {
+		throw error(403, "Forbidden");
+	}
+
+	if (file === "consent.pdf" && !control.can_update_additional_info) {
+		throw error(403, "Forbidden");
+	}
+
+	await platform.env.R2.delete(`users/${bucket}/${file}`);
+
+	await deleted(platform, locals.token.email, file);
 
 	return json({ ok: true });
 };

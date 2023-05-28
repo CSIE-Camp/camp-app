@@ -16,9 +16,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 	check_access(event);
 
 	if (event.request.method === "OPTIONS") {
-		const res = new Response(null);
-		add_cors_headers(res, event.request.headers.get("origin") || "*");
-		return res;
+		return handle_options(event);
 	}
 
 	try {
@@ -34,6 +32,12 @@ export const handle: Handle = async ({ event, resolve }) => {
 		throw err;
 	}
 };
+
+function handle_options(event: RequestEvent) {
+	const res = new Response(null);
+	add_cors_headers(res, event.request.headers.get("origin") || "*");
+	return res;
+}
 
 function add_cors_headers(response: Response, origin: string) {
 	const list = new Set(ALLOWED_ORIGINS);

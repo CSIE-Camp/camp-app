@@ -1,5 +1,5 @@
+import { check_control } from "$lib/server/db/control";
 import { status } from "$lib/server/task";
-import { is_allowed_time } from "$lib/time-check";
 import { error, json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 
@@ -40,7 +40,8 @@ export const POST: RequestHandler = async ({ locals, platform }) => {
 		throw error(500, "D1 not available");
 	}
 
-	if (!is_allowed_time()) {
+	const control = await check_control(platform, locals.token.email);
+	if (!control.can_apply) {
 		throw error(403, "Forbidden");
 	}
 
@@ -75,6 +76,11 @@ export const DELETE: RequestHandler = async ({ locals, platform }) => {
 
 	if (!platform?.env.D1) {
 		throw error(500, "D1 not available");
+	}
+
+	const control = await check_control(platform, locals.token.email);
+	if (!control.can_give_up) {
+		throw error(403, "Forbidden");
 	}
 
 	const { email } = locals.token;

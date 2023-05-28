@@ -1,5 +1,5 @@
+import { check_control } from "$lib/server/db/control";
 import { complete } from "$lib/server/task";
-import { is_allowed_time } from "$lib/time-check";
 import { error, json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 
@@ -16,7 +16,8 @@ export const POST: RequestHandler = async ({ locals, platform, request }) => {
 		throw error(500, "GH_CLIENT_ID or GH_CLIENT_SECRET not available");
 	}
 
-	if (!is_allowed_time()) {
+	const control = await check_control(platform, locals.token.email);
+	if (!control.can_update_profile) {
 		throw error(403, "Forbidden");
 	}
 

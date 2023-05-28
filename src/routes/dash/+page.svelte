@@ -1,11 +1,15 @@
 <script lang="ts">
-	import { goto } from "$app/navigation";
+	import { goto, invalidateAll } from "$app/navigation";
 	import { token, email, task, application } from "$lib/auth";
 	import { onMount } from "svelte";
+	// @ts-expect-error
+	import { Confetti } from "svelte-confetti";
 	import { fade } from "svelte/transition";
 	import Icon from "@iconify/svelte";
+	import type { PageData } from "./$types";
 
-	let disabled = new Date() > new Date("2023-05-27T00:00:00+08:00");
+	export let data: PageData;
+	const has_payment = !!data.payment.account;
 
 	$: tasks = [
 		{
@@ -34,27 +38,7 @@
 	];
 
 	onMount(async () => {
-		fetch("/api/auth/validate", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({
-				token: $token,
-			}),
-		}).then((res) => {
-			if (!res.ok) {
-				goto("/login");
-			}
-
-			return res;
-		});
-
-		fetch("/api/task", {
-			headers: {
-				Authorization: "Bearer " + $token,
-			},
-		}).then(async (res) => {
+		fetch("/api/task").then(async (res) => {
 			if (res.ok) {
 				const json = await res.json<any>();
 				task.set(json.task);
@@ -63,11 +47,7 @@
 			return res;
 		});
 
-		fetch("/api/application", {
-			headers: {
-				Authorization: "Bearer " + $token,
-			},
-		}).then(async (res) => {
+		fetch("/api/application").then(async (res) => {
 			if (res.ok) {
 				const json = await res.json<any>();
 				$application = json || { created: null, updated: null, status: null };
@@ -108,6 +88,12 @@
 	}
 
 	async function cancel() {
+		if (!$application.status?.includes("已受理")) {
+			const confirmed = confirm("確定要放棄錄取嗎？這個動作無法復原喔！");
+			if (!confirmed) {
+				return;
+			}
+		}
 		const res = await fetch("/api/application", {
 			method: "DELETE",
 			headers: {
@@ -116,11 +102,56 @@
 			},
 		});
 
-		if (res.ok) {
-			$application = { created: null, updated: null, status: null };
-		}
+		await invalidateAll();
 
 		return res;
+	}
+
+	let uploading = false;
+	let upload_status = "";
+	async function upload(file: File) {
+		if (uploading) {
+			return;
+		}
+		uploading = true;
+		upload_status = "上傳中";
+		try {
+			const res = await fetch("/api/object/consent.pdf", {
+				method: "PUT",
+				body: file,
+			});
+
+			if (res.ok) {
+				upload_status = "上傳成功";
+				await invalidateAll();
+			} else {
+				upload_status = "上傳失敗";
+			}
+		} finally {
+			uploading = false;
+		}
+	}
+
+	async function update_payment() {
+		if (uploading) {
+			return;
+		}
+		uploading = true;
+
+		try {
+			const res = await fetch("/api/payment", {
+				method: "PUT",
+				body: JSON.stringify({
+					account: data.payment.account,
+				}),
+			});
+
+			if (res.ok) {
+				await invalidateAll();
+			}
+		} finally {
+			uploading = false;
+		}
 	}
 </script>
 
@@ -132,10 +163,128 @@
 	/>
 </svelte:head>
 
+{#if $application.status?.includes("錄取")}
+	<div class="pointer-events-none fixed -top-12 left-0 z-10 flex h-full w-full justify-center">
+		<Confetti
+			x={[-5, 5]}
+			y={[0, 0.1]}
+			delay={[0, 6500]}
+			duration="5000"
+			amount="800"
+			fallDistance="100vh"
+		/>
+	</div>
+{/if}
+
 {#if $email}
 	<div class="h-full w-full overflow-auto px-4" in:fade={{ duration: 300 }}>
 		<div class="mx-auto my-8 flex max-w-xl flex-col items-center">
 			<h1 class="text-xl md:text-3xl">帳號：{$email}</h1>
+
+			{#if $task.profile && $task.avatar && $task.quiz && $task.github}
+				<div class="divider" />
+				<h2 class="text-lg md:text-xl">報名申請狀態</h2>
+				<p class="text-sm opacity-60">報名資格審查進行中</p>
+
+				{#if $application.status}
+					<div
+						class="text-3xl"
+						class:text-info={$application.status?.includes("已受理")}
+						class:text-success={$application.status?.includes("錄取")}
+						class:text-warning={$application.status?.includes("備取")}
+					>
+						{$application.status}
+					</div>
+				{/if}
+
+				{#if $application.status ? data.control.can_give_up : data.control.can_apply}
+					<button
+						class="btn-outline btn mt-2 w-full"
+						class:btn-success={!$application.status}
+						class:btn-error={$application.status}
+						on:click={!$application.status ? apply : cancel}
+					>
+						{!$application.status
+							? "申請報名"
+							: $application.status?.includes("已受理")
+							? "取消報名"
+							: "放棄錄取"}
+					</button>
+				{/if}
+			{/if}
+
+			{#if data.control.can_update_additional_info}
+				<div class="divider" />
+				<h2 class="text-lg md:text-xl">繳費資料與家長同意書</h2>
+				<p class="text-sm opacity-60">
+					請在完成繳費後輸入你的「匯款帳號」與上傳「家長同意書」
+				</p>
+
+				<div class="form-control w-full">
+					<label class="label" for="">
+						<span class="label-text">匯款帳號後五碼</span>
+						{#if has_payment}
+							<span class="label-text text-success">
+								<Icon icon="carbon:checkmark" class="mr-1 inline-block" />
+								已填寫
+							</span>
+						{/if}
+					</label>
+					<label class="input-group">
+						<input
+							type="text"
+							placeholder="12345"
+							class="input-bordered input w-full"
+							bind:value={data.payment.account}
+						/>
+						<button
+							class="btn-primary btn"
+							on:click={update_payment}
+							disabled={uploading || data.payment.account.length !== 5}
+						>
+							儲存
+						</button>
+					</label>
+				</div>
+
+				<div class="form-control w-full">
+					<label class="label" for="">
+						<span class="label-text">家長同意書</span>
+						{#if data.files.find((f) => f.file === "consent.pdf")}
+							<span class="label-text text-success">
+								<a
+									href="/api/object/consent.pdf?n={Date.now()
+										.toString(36)
+										.substring(2)}"
+									title="下載"
+									target="_blank"
+								>
+									<Icon icon="carbon:download" class="mr-2 inline-block" />
+								</a>
+								<Icon icon="carbon:checkmark" class="mr-1 inline-block" />
+								已上傳
+							</span>
+						{/if}
+					</label>
+					<label class="input-group">
+						<input
+							type="file"
+							class="file-input-bordered file-input-primary file-input w-full rounded-l-lg"
+							accept="application/pdf"
+							on:change={(evt) => {
+								// @ts-expect-error svelte missing type
+								upload(evt.target.files[0]);
+							}}
+							disabled={uploading}
+						/>
+					</label>
+					{#if upload_status}
+						<label class="label" for="">
+							<span class="label-text">{upload_status}</span>
+						</label>
+					{/if}
+				</div>
+			{/if}
 
 			<div class="divider" />
 			<h2 class="text-lg md:text-xl">你的報名資格</h2>
@@ -162,40 +311,13 @@
 							class="btn-outline btn mt-2 w-full p-2"
 							class:hidden={!(task.done ? task.redo : task.action)}
 							on:click={task.done ? task.redo : task.action}
-							{disabled}
+							disabled={!data.control?.can_update_profile}
 						>
 							{task.done ? "編輯" : "立即完成"}
 						</button>
 					</div>
 				{/each}
 			</div>
-
-			{#if $task.profile && $task.avatar && $task.quiz && $task.github}
-				<div class="divider" />
-				<h2 class="text-lg md:text-xl">報名申請狀態</h2>
-				<p class="text-sm opacity-60">報名結果將在稍後公佈</p>
-
-				{#if $application.status}
-					<div
-						class="text-3xl"
-						class:text-info={$application.status?.includes("已受理")}
-						class:text-success={$application.status?.includes("錄取")}
-						class:text-warning={$application.status?.includes("備取")}
-					>
-						{$application.status}
-					</div>
-				{/if}
-
-				<button
-					class="btn-outline btn mt-2 w-full"
-					class:btn-success={!$application.status}
-					class:btn-error={$application.status}
-					on:click={!$application.status ? apply : cancel}
-					{disabled}
-				>
-					{!$application.status ? "申請報名" : "取消報名"}
-				</button>
-			{/if}
 
 			<div class="divider" />
 			<h2 class="mb-2 text-lg md:text-xl">聯絡我們</h2>

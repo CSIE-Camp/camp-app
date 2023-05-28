@@ -42,9 +42,32 @@ export interface Voting {
 	vote: number;
 }
 
+export interface UserControl {
+	email: string;
+	can_update_profile: boolean;
+	can_apply: boolean;
+	can_give_up: boolean;
+	can_update_additional_info: boolean;
+}
+
+export interface Attachment {
+	email: string;
+	file: string;
+	time: string;
+}
+
+export interface Payment {
+	email: string;
+	account: string;
+	time: string;
+}
+
 export interface Database {
 	Application: Application;
 	Profile: Profile;
 	TaskProgress: TaskProgress;
 	Voting: Voting;
+	UserControl: UserControl;
+	Attachment: Attachment;
+	Payment: Payment;
 }
