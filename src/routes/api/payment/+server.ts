@@ -18,13 +18,17 @@ export const PUT: RequestHandler = async ({ locals, request, platform }) => {
 	}
 
 	const body = await request.json();
-	const { account } = body as { account: string };
+	const { account, time } = body as { account: string; time: string };
 
 	if (typeof account !== "string" || account.length !== 5) {
 		throw error(400, "Bad Request");
 	}
 
-	const time = new Date().toISOString();
+	if (typeof time !== "string" || time.length > 100) {
+		throw error(400, "Bad Request");
+	}
+
+	const updated = new Date().toISOString();
 
 	const db = new D1(platform);
 
@@ -34,8 +38,9 @@ export const PUT: RequestHandler = async ({ locals, request, platform }) => {
 			email: locals.token.email,
 			account,
 			time,
+			updated,
 		})
-		.onConflict((oc) => oc.columns(["email"]).doUpdateSet({ account, time }))
+		.onConflict((oc) => oc.columns(["email"]).doUpdateSet({ account, time, updated }))
 		.execute();
 
 	return json({ ok: true });

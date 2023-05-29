@@ -28,6 +28,7 @@ export const load: LayoutServerLoad = async ({ locals, platform }) => {
 			email: locals.token.email,
 			account: "",
 			time: "",
+			updated: "",
 		},
 	};
 };

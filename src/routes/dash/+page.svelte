@@ -149,6 +149,7 @@
 				method: "PUT",
 				body: JSON.stringify({
 					account: data.payment.account,
+					time: data.payment.time,
 				}),
 			});
 
@@ -238,21 +239,37 @@
 							</span>
 						{/if}
 					</label>
-					<label class="input-group">
-						<input
-							type="text"
-							placeholder="12345"
-							class="input-bordered input w-full"
-							bind:value={data.payment.account}
-						/>
-						<button
-							class="btn-primary btn"
-							on:click={update_payment}
-							disabled={uploading || data.payment.account.length !== 5}
-						>
-							儲存
-						</button>
+					<input
+						type="text"
+						placeholder="12345"
+						class="input-bordered input w-full"
+						bind:value={data.payment.account}
+					/>
+
+					<label class="label" for="">
+						<span class="label-text">匯款日期</span>
+						{#if has_payment}
+							<span class="label-text text-success">
+								<Icon icon="carbon:checkmark" class="mr-1 inline-block" />
+								已填寫
+							</span>
+						{/if}
 					</label>
+					<input
+						type="date"
+						class="input-bordered input w-full"
+						bind:value={data.payment.time}
+					/>
+
+					<button
+						class="btn-primary btn my-4 mt-2 self-end"
+						on:click={update_payment}
+						disabled={uploading ||
+							data.payment.account.length !== 5 ||
+							!data.payment.time}
+					>
+						儲存
+					</button>
 				</div>
 
 				<div class="form-control w-full">
@@ -277,7 +294,7 @@
 					<label class="input-group">
 						<input
 							type="file"
-							class="file-input-bordered file-input-primary file-input w-full rounded-l-lg"
+							class="file-input-bordered file-input-primary file-input w-full !rounded-l-lg"
 							accept="application/pdf"
 							on:change={(evt) => {
 								// @ts-expect-error svelte missing type
@@ -286,11 +303,23 @@
 							disabled={uploading}
 						/>
 					</label>
-					{#if upload_status}
-						<label class="label" for="">
-							<span class="label-text">{upload_status}</span>
-						</label>
-					{/if}
+					<label class="label" for="">
+						<span class="label-text">
+							{#if upload_status}
+								{upload_status}
+							{/if}
+						</span>
+						<span class="label-text">
+							<a
+								href="https://drive.google.com/file/d/1biU7xrUDut9MjMw4p44g3Ww48uC29xg3/view"
+								title="下載家長同意書"
+								target="_blank"
+							>
+								<Icon icon="carbon:download" class="mr-1 inline-block" />
+								下載家長同意書
+							</a>
+						</span>
+					</label>
 				</div>
 			{/if}
 

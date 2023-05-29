@@ -60,6 +60,7 @@ export interface Payment {
 	email: string;
 	account: string;
 	time: string;
+	updated: string;
 }
 
 export interface Database {
