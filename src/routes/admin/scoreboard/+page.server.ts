@@ -27,7 +27,10 @@ export const load: PageServerLoad = async ({ locals, platform }) => {
 	const q1 = db
 		.selectFrom("Voting")
 		.innerJoin("Profile", "Profile.email", "Voting.target")
-		.groupBy("Voting.target")
+		.leftJoin("Application", "Profile.email", "Application.email")
+		.leftJoin("Payment", "Profile.email", "Payment.email")
+		.leftJoin("Attachment", "Profile.email", "Attachment.email")
+		.groupBy(["Voting.target"])
 		.select([
 			"Profile.name",
 			"Profile.school",
@@ -42,6 +45,10 @@ export const load: PageServerLoad = async ({ locals, platform }) => {
 			"Profile.skill_experienced",
 			"Profile.skill_mastered",
 			(b) => b.fn.sum("vote").as("score"),
+			"Application.status",
+			"Payment.account",
+			"Payment.time as pay_date",
+			"Attachment.file",
 		])
 		.orderBy("score", "desc");
 

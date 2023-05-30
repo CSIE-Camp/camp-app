@@ -32,6 +32,9 @@
 					<th>食物</th>
 					<th>衣服</th>
 					<th>分數</th>
+					<th>狀態</th>
+					<th>繳費</th>
+					<th>同意書</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -60,6 +63,32 @@
 							<td class="transition-all">{app.food_type}</td>
 							<td class="transition-all">{app.clothes_size}</td>
 							<td class="transition-all">{app.score}</td>
+							<td
+								class="transition-all"
+								class:text-error={!app.status}
+								class:text-success={app.status?.includes("錄取")}
+							>
+								{app.status || "放棄 QQ"}
+							</td>
+							<td
+								class="transition-all"
+								class:text-success={app.account && app.pay_date}
+							>
+								{#if app.account && app.pay_date}
+									{app.account} ({app.pay_date})
+								{:else}
+									無
+								{/if}
+							</td>
+							<td class="transition-all" class:text-success={app.file}>
+								{#if app.file}
+									<a href="/admin/file/{bucket}/consent.pdf" target="_blank">
+										{app.file}
+									</a>
+								{:else}
+									無
+								{/if}
+							</td>
 						</tr>
 					{/await}
 				{/each}

@@ -73,9 +73,9 @@ export const PUT: RequestHandler = async ({ locals, params, request, platform })
 
 	if (file === "profile.jpg") {
 		await complete("avatar", locals.token.email, platform);
+	} else {
+		await uploaded(platform, locals.token.email, file);
 	}
-
-	await uploaded(platform, locals.token.email, file);
 
 	return json({ ok: true });
 };
