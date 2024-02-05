@@ -1,5 +1,5 @@
 import { env } from "$env/dynamic/private";
-import { D1 } from "$lib/server/db";
+import { db } from "$lib/server/db";
 import { json, redirect } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 
@@ -26,8 +26,6 @@ export const POST: RequestHandler = async ({ locals, platform, request }) => {
 		target: string;
 		choice: number;
 	}>();
-
-	const db = new D1(platform);
 
 	await db
 		.insertInto("Voting")

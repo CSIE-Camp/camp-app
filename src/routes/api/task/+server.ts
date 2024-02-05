@@ -1,7 +1,6 @@
 import { TaskSchema } from "$lib/schema";
 import { check_control } from "$lib/server/db/control";
-import { complete, status, selfchecks } from "$lib/server/task";
-import { is_allowed_time } from "$lib/time-check";
+import { complete, selfchecks, status } from "$lib/server/task";
 import { error, json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 
@@ -10,8 +9,8 @@ export const GET: RequestHandler = async ({ locals, platform }) => {
 		throw error(401, "Unauthorized");
 	}
 
-	if (!platform?.env.D1) {
-		throw error(500, "D1 not available");
+	if (!platform) {
+		throw error(500, "Platform not available");
 	}
 
 	const { email } = locals.token;
@@ -26,11 +25,11 @@ export const PUT: RequestHandler = async ({ locals, request, platform }) => {
 		throw error(401, "Unauthorized");
 	}
 
-	if (!platform?.env.D1) {
-		throw error(500, "D1 not available");
+	if (!platform) {
+		throw error(500, "Platform not available");
 	}
 
-	const control = await check_control(platform, locals.token.email);
+	const control = await check_control(locals.token.email);
 	if (!control.can_update_profile) {
 		throw error(403, "Forbidden");
 	}

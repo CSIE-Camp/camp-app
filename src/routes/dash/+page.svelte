@@ -216,8 +216,8 @@
 						{!application.status
 							? "申請報名"
 							: application.status?.includes("已受理")
-							? "取消報名"
-							: "放棄錄取"}
+								? "取消報名"
+								: "放棄錄取"}
 					</button>
 				{/if}
 			{/if}

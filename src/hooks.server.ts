@@ -1,16 +1,35 @@
+import { dev } from "$app/environment";
 import { env } from "$env/dynamic/private";
 import { ALLOWED_ORIGINS } from "$lib/config";
 import { TokenSchema } from "$lib/schema";
 import { check_access } from "$lib/server/guard";
-import { locale, waitLocale } from "svelte-i18n";
-import { ZodError } from "zod";
 import { error, type Handle, type RequestEvent } from "@sveltejs/kit";
 import jwt from "@tsndr/cloudflare-worker-jwt";
+import { locale } from "svelte-i18n";
+import { ZodError } from "zod";
 
 export const handle: Handle = async ({ event, resolve }) => {
 	const lang = event.request.headers.get("accept-language")?.split(",")[0] || "zh-TW";
-	locale.set(lang);
-	await waitLocale();
+	await locale.set(lang);
+
+	if (dev) {
+		const { R2Bucket } = await import("@miniflare/r2");
+		const { Cache } = await import("@miniflare/cache");
+		const { FileStorage } = await import("@miniflare/storage-file");
+		const cache = new Cache(new FileStorage(".mf/cache"));
+		event.platform = {
+			env: {
+				// @ts-expect-error
+				R2: new R2Bucket(new FileStorage(".mf/r2")),
+			},
+			caches: {
+				// @ts-expect-error
+				async open() {
+					return cache;
+				},
+			},
+		};
+	}
 
 	await set_token(event);
 	check_access(event);

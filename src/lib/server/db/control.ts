@@ -1,8 +1,6 @@
-import D1 from "./d1";
+import { db } from "./index";
 
-export async function check_control(platform: App.Platform, email: string) {
-	const db = new D1(platform);
-
+export async function check_control(email: string) {
 	const control = await db
 		.selectFrom("UserControl")
 		.where(({ or, cmpr }) => or([cmpr("email", "=", email), cmpr("email", "=", "fallback")]))

@@ -1,4 +1,5 @@
 import { ProfileSchema } from "$lib/schema";
+import { db } from "$lib/server/db";
 import { check_control } from "$lib/server/db/control";
 import { complete } from "$lib/server/task";
 import { error, json } from "@sveltejs/kit";
@@ -9,15 +10,13 @@ export const GET: RequestHandler = async ({ locals, platform }) => {
 		throw error(401, "Unauthorized");
 	}
 
-	if (!platform?.env.D1) {
-		throw error(500, "D1 not available");
-	}
-
 	const { email } = locals.token;
 
-	const profile = await platform.env.D1.prepare("SELECT * FROM Profile WHERE email = ?")
-		.bind(email)
-		.first();
+	const profile = await db
+		.selectFrom("Profile")
+		.where("email", "=", email)
+		.selectAll()
+		.executeTakeFirst();
 
 	if (profile === null) {
 		throw error(404, "Profile not found");
@@ -31,11 +30,11 @@ export const PUT: RequestHandler = async ({ locals, request, platform }) => {
 		throw error(401, "Unauthorized");
 	}
 
-	if (!platform?.env.D1) {
-		throw error(500, "D1 not available");
+	if (!platform) {
+		throw error(500, "Platform not available");
 	}
 
-	const control = await check_control(platform, locals.token.email);
+	const control = await check_control(locals.token.email);
 	if (!control.can_update_profile) {
 		throw error(403, "Forbidden");
 	}
@@ -46,32 +45,54 @@ export const PUT: RequestHandler = async ({ locals, request, platform }) => {
 	const { email } = locals.token;
 
 	try {
-		await platform.env.D1.prepare(
-			"INSERT OR REPLACE INTO Profile VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
-		)
-			.bind(
+		await db
+			.insertInto("Profile")
+			.values({
 				email,
-				profile.name,
-				profile.gender,
-				profile.school,
-				profile.birth,
-				profile.personal_id,
-				profile.phone,
-				profile.blood_type,
-				profile.facebook,
-				profile.parent_name,
-				profile.parent_relation,
-				profile.parent_phone,
-				profile.food_type,
-				profile.allergy_source,
-				profile.disease,
-				profile.clothes_size,
-				profile.self_intro,
-				profile.motivation,
-				profile.skill_experienced,
-				profile.skill_mastered,
+				name: profile.name,
+				gender: profile.gender,
+				school: profile.school,
+				birth: profile.birth,
+				personal_id: profile.personal_id,
+				phone: profile.phone,
+				blood_type: profile.blood_type,
+				facebook: profile.facebook,
+				parent_name: profile.parent_name,
+				parent_relation: profile.parent_relation,
+				parent_phone: profile.parent_phone,
+				food_type: profile.food_type,
+				allergy_source: profile.allergy_source,
+				disease: profile.disease,
+				clothes_size: profile.clothes_size,
+				self_intro: profile.self_intro,
+				motivation: profile.motivation,
+				skill_experienced: profile.skill_experienced,
+				skill_mastered: profile.skill_mastered,
+			})
+			.onConflict((oc) =>
+				oc.columns(["email"]).doUpdateSet({
+					name: profile.name,
+					gender: profile.gender,
+					school: profile.school,
+					birth: profile.birth,
+					personal_id: profile.personal_id,
+					phone: profile.phone,
+					blood_type: profile.blood_type,
+					facebook: profile.facebook,
+					parent_name: profile.parent_name,
+					parent_relation: profile.parent_relation,
+					parent_phone: profile.parent_phone,
+					food_type: profile.food_type,
+					allergy_source: profile.allergy_source,
+					disease: profile.disease,
+					clothes_size: profile.clothes_size,
+					self_intro: profile.self_intro,
+					motivation: profile.motivation,
+					skill_experienced: profile.skill_experienced,
+					skill_mastered: profile.skill_mastered,
+				}),
 			)
-			.run();
+			.execute();
 
 		await complete("profile", email, platform);
 		return json({ ok: true });

@@ -6,14 +6,17 @@
 
 	export let data: PageData;
 	$: apps = data.applications;
-	$: groups = data.applications.reduce((acc, cur) => {
-		if (acc[cur.status]) {
-			acc[cur.status].push(cur);
-		} else {
-			acc[cur.status] = [cur];
-		}
-		return acc;
-	}, {} as Record<string, typeof apps>);
+	$: groups = data.applications.reduce(
+		(acc, cur) => {
+			if (acc[cur.status]) {
+				acc[cur.status].push(cur);
+			} else {
+				acc[cur.status] = [cur];
+			}
+			return acc;
+		},
+		{} as Record<string, typeof apps>,
+	);
 
 	$: group = Object.keys(groups || [])[0];
 

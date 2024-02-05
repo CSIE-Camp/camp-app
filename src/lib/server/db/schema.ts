@@ -44,10 +44,10 @@ export interface Voting {
 
 export interface UserControl {
 	email: string;
-	can_update_profile: boolean;
-	can_apply: boolean;
-	can_give_up: boolean;
-	can_update_additional_info: boolean;
+	can_update_profile: number;
+	can_apply: number;
+	can_give_up: number;
+	can_update_additional_info: number;
 }
 
 export interface Attachment {

@@ -1,5 +1,5 @@
 import { env } from "$env/dynamic/private";
-import { D1 } from "$lib/server/db";
+import { db } from "$lib/server/db";
 import { redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 
@@ -21,8 +21,6 @@ export const load: PageServerLoad = async ({ locals, platform }) => {
 		);
 		throw redirect(302, "/login");
 	}
-
-	const db = new D1(platform);
 
 	const q1 = db
 		.selectFrom("Voting")

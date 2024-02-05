@@ -48,10 +48,10 @@ CREATE TABLE Application (
 
 CREATE TABLE IF NOT EXISTS UserControl (
     email TEXT NOT NULL PRIMARY KEY,
-    can_update_profile BOOL NOT NULL DEFAULT FALSE,
-    can_apply BOOL NOT NULL DEFAULT FALSE,
-    can_give_up BOOL NOT NULL DEFAULT FALSE,
-    can_update_additional_info BOOL NOT NULL DEFAULT FALSE,
+    can_update_profile INT NOT NULL DEFAULT FALSE,
+    can_apply INT NOT NULL DEFAULT FALSE,
+    can_give_up INT NOT NULL DEFAULT FALSE,
+    can_update_additional_info INT NOT NULL DEFAULT FALSE
 );
 
 CREATE TABLE IF NOT EXISTS Attachment (

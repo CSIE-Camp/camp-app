@@ -1,3 +1,4 @@
+import { db } from "$lib/server/db";
 import { check_control } from "$lib/server/db/control";
 import { status } from "$lib/server/task";
 import { error, json } from "@sveltejs/kit";
@@ -8,17 +9,13 @@ export const GET: RequestHandler = async ({ locals, platform }) => {
 		throw error(401, "Unauthorized");
 	}
 
-	if (!platform?.env.D1) {
-		throw error(500, "D1 not available");
-	}
-
 	const { email } = locals.token;
 
-	const record: Record<string, string> = await platform.env.D1.prepare(
-		"SELECT * FROM Application WHERE email = ?",
-	)
-		.bind(email)
-		.first();
+	const record = await db
+		.selectFrom("Application")
+		.where("email", "=", email)
+		.selectAll()
+		.executeTakeFirst();
 
 	if (!record) {
 		throw error(404, "Not found");
@@ -36,11 +33,11 @@ export const POST: RequestHandler = async ({ locals, platform }) => {
 		throw error(401, "Unauthorized");
 	}
 
-	if (!platform?.env.D1) {
-		throw error(500, "D1 not available");
+	if (!platform) {
+		throw error(500, "Platform not available");
 	}
 
-	const control = await check_control(platform, locals.token.email);
+	const control = await check_control(locals.token.email);
 	if (!control.can_apply) {
 		throw error(403, "Forbidden");
 	}
@@ -56,11 +53,15 @@ export const POST: RequestHandler = async ({ locals, platform }) => {
 	}
 
 	const date = new Date().toISOString();
-	await platform.env.D1.prepare(
-		"INSERT INTO Application (email, created, updated, status) VALUES (?, ?, ?, ?)",
-	)
-		.bind(email, date, date, "報名已受理")
-		.run();
+	await db
+		.insertInto("Application")
+		.values({
+			email,
+			created: date,
+			updated: date,
+			status: "報名已受理",
+		})
+		.execute();
 
 	return json({
 		created: date,
@@ -74,18 +75,14 @@ export const DELETE: RequestHandler = async ({ locals, platform }) => {
 		throw error(401, "Unauthorized");
 	}
 
-	if (!platform?.env.D1) {
-		throw error(500, "D1 not available");
-	}
-
-	const control = await check_control(platform, locals.token.email);
+	const control = await check_control(locals.token.email);
 	if (!control.can_give_up) {
 		throw error(403, "Forbidden");
 	}
 
 	const { email } = locals.token;
 
-	await platform.env.D1.prepare("DELETE FROM Application WHERE email = ?").bind(email).run();
+	await db.deleteFrom("Application").where("email", "=", email).execute();
 
 	return json({ ok: true });
 };

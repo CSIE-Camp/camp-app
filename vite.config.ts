@@ -1,14 +1,14 @@
-import { defineConfig } from "vitest/config";
 import { sentryVitePlugin } from "@sentry/vite-plugin";
 import { sveltekit } from "@sveltejs/kit/vite";
+import { defineConfig } from "vitest/config";
 
 const plugins = [sveltekit()];
 
 if (process.env.SENTRY_AUTH_TOKEN) {
 	plugins.push(
 		sentryVitePlugin({
-			org: "jacoblincool",
-			project: "camp-app",
+			org: process.env.SENTRY_ORG,
+			project: process.env.SENTRY_PROJECT,
 
 			// Auth tokens can be obtained from https://sentry.io/settings/account/api/auth-tokens/
 			// and need `project:releases` and `org:read` scopes

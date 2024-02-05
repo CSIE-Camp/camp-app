@@ -45,7 +45,7 @@ export const PUT: RequestHandler = async ({ locals, params, request, platform })
 		throw error(500, "R2 not available");
 	}
 
-	const control = await check_control(platform, locals.token.email);
+	const control = await check_control(locals.token.email);
 
 	const bucket = await hash(locals.token.email);
 	const file = params.file;
@@ -74,7 +74,7 @@ export const PUT: RequestHandler = async ({ locals, params, request, platform })
 	if (file === "profile.jpg") {
 		await complete("avatar", locals.token.email, platform);
 	} else {
-		await uploaded(platform, locals.token.email, file);
+		await uploaded(locals.token.email, file);
 	}
 
 	return json({ ok: true });
@@ -89,7 +89,7 @@ export const DELETE: RequestHandler = async ({ locals, params, platform }) => {
 		throw error(500, "R2 not available");
 	}
 
-	const control = await check_control(platform, locals.token.email);
+	const control = await check_control(locals.token.email);
 
 	const bucket = await hash(locals.token.email);
 	const file = params.file;
@@ -108,7 +108,7 @@ export const DELETE: RequestHandler = async ({ locals, params, platform }) => {
 
 	await platform.env.R2.delete(`users/${bucket}/${file}`);
 
-	await deleted(platform, locals.token.email, file);
+	await deleted(locals.token.email, file);
 
 	return json({ ok: true });
 };

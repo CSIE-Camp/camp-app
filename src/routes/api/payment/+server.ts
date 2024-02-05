@@ -1,18 +1,14 @@
-import { D1 } from "$lib/server/db";
+import { db } from "$lib/server/db";
 import { check_control } from "$lib/server/db/control";
 import { error, json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 
-export const PUT: RequestHandler = async ({ locals, request, platform }) => {
+export const PUT: RequestHandler = async ({ locals, request }) => {
 	if (!locals.token) {
 		throw error(401, "Unauthorized");
 	}
 
-	if (!platform?.env.D1) {
-		throw error(500, "D1 not available");
-	}
-
-	const control = await check_control(platform, locals.token.email);
+	const control = await check_control(locals.token.email);
 	if (!control.can_update_additional_info) {
 		throw error(403, "Forbidden");
 	}
@@ -29,8 +25,6 @@ export const PUT: RequestHandler = async ({ locals, request, platform }) => {
 	}
 
 	const updated = new Date().toISOString();
-
-	const db = new D1(platform);
 
 	await db
 		.insertInto("Payment")

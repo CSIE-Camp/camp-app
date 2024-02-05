@@ -1,8 +1,10 @@
-export const tasks = ["profile", "avatar", "quiz", "github"];
+import { db } from "./db";
+
+export const tasks = ["profile", "avatar", "quiz", "github"] as const;
 export const selfchecks = ["quiz"];
 
 export async function complete(
-	task: string,
+	task: (typeof tasks)[number],
 	email: string,
 	platform: Readonly<App.Platform>,
 	value?: string,
@@ -14,11 +16,12 @@ export async function complete(
 
 		value = value ?? new Date().toJSON();
 
-		await platform.env.D1.prepare(
-			`INSERT INTO TaskProgress ( email, ${task} ) VALUES ( ?, ? ) ON CONFLICT (email) DO UPDATE SET ${task} = ?`,
-		)
-			.bind(email, value, value)
-			.run();
+		// @ts-expect-error
+		await db
+			.insertInto("TaskProgress")
+			.values({ email, [task]: value })
+			.onConflict((oc) => oc.columns(["email"]).doUpdateSet({ [task]: value }))
+			.execute();
 	} catch (err) {
 		console.error(err, email);
 		throw err;
@@ -26,9 +29,11 @@ export async function complete(
 }
 
 export async function status(email: string, platform: Readonly<App.Platform>) {
-	const task = await platform.env.D1.prepare("SELECT * FROM TaskProgress WHERE email = ?")
-		.bind(email)
-		.first();
+	const task = await db
+		.selectFrom("TaskProgress")
+		.selectAll()
+		.where("email", "=", email)
+		.executeTakeFirst();
 
 	if (!task) {
 		return {

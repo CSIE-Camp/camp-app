@@ -1,3 +1,4 @@
+import { env } from "$env/dynamic/private";
 import { check_control } from "$lib/server/db/control";
 import { complete } from "$lib/server/task";
 import { error, json } from "@sveltejs/kit";
@@ -8,15 +9,15 @@ export const POST: RequestHandler = async ({ locals, platform, request }) => {
 		throw error(401, "Unauthorized");
 	}
 
-	if (!platform?.env.D1) {
-		throw error(500, "D1 not available");
+	if (!platform) {
+		throw error(500, "Platform not available");
 	}
 
-	if (!platform.env.GH_CLIENT_ID || !platform.env.GH_CLIENT_SECRET) {
+	if (!env.GH_CLIENT_ID || !env.GH_CLIENT_SECRET) {
 		throw error(500, "GH_CLIENT_ID or GH_CLIENT_SECRET not available");
 	}
 
-	const control = await check_control(platform, locals.token.email);
+	const control = await check_control(locals.token.email);
 	if (!control.can_update_profile) {
 		throw error(403, "Forbidden");
 	}
@@ -32,8 +33,8 @@ export const POST: RequestHandler = async ({ locals, platform, request }) => {
 			Accept: "application/json",
 		},
 		body: JSON.stringify({
-			client_id: platform.env.GH_CLIENT_ID,
-			client_secret: platform.env.GH_CLIENT_SECRET,
+			client_id: env.GH_CLIENT_ID,
+			client_secret: env.GH_CLIENT_SECRET,
 			code,
 		}),
 	});

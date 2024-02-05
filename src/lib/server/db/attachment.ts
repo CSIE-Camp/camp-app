@@ -1,12 +1,10 @@
-import D1 from "./d1";
+import { db } from "./index";
 
 /**
  * mark the attachment as uploaded
  */
-export async function uploaded(platform: App.Platform, email: string, file: string) {
+export async function uploaded(email: string, file: string) {
 	const time = new Date().toString();
-
-	const db = new D1(platform);
 
 	return await db
 		.insertInto("Attachment")
@@ -19,9 +17,7 @@ export async function uploaded(platform: App.Platform, email: string, file: stri
 /**
  * mark the attachment as deleted
  */
-export async function deleted(platform: App.Platform, email: string, file: string) {
-	const db = new D1(platform);
-
+export async function deleted(email: string, file: string) {
 	return await db
 		.deleteFrom("Attachment")
 		.where("email", "=", email)
@@ -33,9 +29,7 @@ export async function deleted(platform: App.Platform, email: string, file: strin
 /**
  * get all attachments of the user
  */
-export async function attachments(platform: App.Platform, email: string) {
-	const db = new D1(platform);
-
+export async function attachments(email: string) {
 	return await db
 		.selectFrom("Attachment")
 		.where("email", "=", email)
@@ -47,9 +41,7 @@ export async function attachments(platform: App.Platform, email: string) {
 /**
  * check if the attachment is uploaded
  */
-export async function is_uploaded(platform: App.Platform, email: string, file: string) {
-	const db = new D1(platform);
-
+export async function is_uploaded(email: string, file: string) {
 	const result = await db
 		.selectFrom("Attachment")
 		.where("email", "=", email)

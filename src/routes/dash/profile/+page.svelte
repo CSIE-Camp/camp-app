@@ -208,10 +208,13 @@
 				...emergency,
 				...others,
 				...about,
-			}).reduce((acc, [key, value]) => {
-				acc[key] = value.value;
-				return acc;
-			}, {} as Record<string, string>);
+			}).reduce(
+				(acc, [key, value]) => {
+					acc[key] = value.value;
+					return acc;
+				},
+				{} as Record<string, string>,
+			);
 
 			const profile = ProfileSchema.parse(data);
 
