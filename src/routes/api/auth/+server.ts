@@ -4,6 +4,8 @@ import { TOKEN_EXPIRY } from "$lib/config";
 import { AuthRequest, TokenSchema } from "$lib/schema";
 import { error, json } from "@sveltejs/kit";
 import jwt from "@tsndr/cloudflare-worker-jwt";
+import { create } from "hermes-mail";
+import EMAIL from "../../../../static/email-template.html?raw";
 import type { RequestHandler } from "./$types";
 
 export const POST: RequestHandler = async ({ url, request }) => {
@@ -35,34 +37,40 @@ export const POST: RequestHandler = async ({ url, request }) => {
 		console.log("Use this URL to login:", `${origin}/auth?token=${encodeURIComponent(token)}`);
 	} else {
 		// send login email
-		const res = await fetch("https://hermes.csie.cool/api/send", {
-			method: "POST",
+		const client = create({ baseUrl: "https://hermes.csie.cool" });
+		const content = EMAIL.replace(
+			/{link_url}/g,
+			`${origin}/auth?token=${encodeURIComponent(token)}`,
+		);
+		const { response } = await client.POST("/api/send", {
 			headers: {
 				Authorization: `Bearer ${env.HERMES_TOKEN}`,
-				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({
+			body: {
 				from: {
 					email: "camp@csie.cool",
 					name: "師大資工營",
 				},
-				to: [email],
 				subject: "師大資工營報名登入",
-				content: {
-					template: "simple",
-					params: {
-						icon: "https://camp-storage.csie.cool/camp-icon.jpg",
-						greeting: "",
-						main: "師大資工營報名登入",
-						body: "請使用下方專屬魔法連結登入報名系統（此連結僅授權在相同裝置及瀏覽器上登入）",
-						link: `登入,${origin}/auth?token=${encodeURIComponent(token)}`,
-						footer: "官方網站,https://camp.csie.cool;Instagram,https://www.instagram.com/ntnucsiecamp2023/;Facebook,https://www.facebook.com/ntnucsiecamp",
+				content: [
+					{
+						type: "text/html",
+						value: content,
 					},
-				},
-			}),
+				],
+				personalizations: [
+					{
+						to: [
+							{
+								email,
+							},
+						],
+					},
+				],
+			},
 		});
 
-		if (!res.ok) {
+		if (!response.ok) {
 			throw error(500, "Failed to send login email");
 		}
 	}

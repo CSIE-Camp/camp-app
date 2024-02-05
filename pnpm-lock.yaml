@@ -86,6 +86,9 @@ devDependencies:
     eslint-plugin-svelte:
         specifier: ^2.35.1
         version: 2.35.1(eslint@8.56.0)(svelte@4.2.10)
+    hermes-mail:
+        specifier: ^2.0.0
+        version: 2.0.0
     husky:
         specifier: ^9.0.10
         version: 9.0.10
@@ -5359,6 +5362,16 @@ packages:
             function-bind: 1.1.2
         dev: true
 
+    /hermes-mail@2.0.0:
+        resolution:
+            {
+                integrity: sha512-2D7ELQaL53srVr0SbulL8Qb8t15FLEcHKc7C8gQKwHAfpPX3fi6ymps5w+uSyRE+p59Fi9t2BYZKDsztkMLdCg==,
+            }
+        dependencies:
+            openapi-fetch: 0.8.2
+            openapi-typescript-helpers: 0.0.6
+        dev: true
+
     /hosted-git-info@2.8.9:
         resolution:
             {
@@ -6821,6 +6834,29 @@ packages:
         engines: { node: ">=12" }
         dependencies:
             mimic-fn: 4.0.0
+        dev: true
+
+    /openapi-fetch@0.8.2:
+        resolution:
+            {
+                integrity: sha512-4g+NLK8FmQ51RW6zLcCBOVy/lwYmFJiiT+ckYZxJWxUxH4XFhsNcX2eeqVMfVOi+mDNFja6qDXIZAz2c5J/RVw==,
+            }
+        dependencies:
+            openapi-typescript-helpers: 0.0.5
+        dev: true
+
+    /openapi-typescript-helpers@0.0.5:
+        resolution:
+            {
+                integrity: sha512-MRffg93t0hgGZbYTxg60hkRIK2sRuEOHEtCUgMuLgbCC33TMQ68AmxskzUlauzZYD47+ENeGV/ElI7qnWqrAxA==,
+            }
+        dev: true
+
+    /openapi-typescript-helpers@0.0.6:
+        resolution:
+            {
+                integrity: sha512-2d0qCzTcD8aADUMHjG/XOgti8/m857Z0q/Ix4y2jTGIpq5OLcE/KfTagcik8qkKDTowbvNo91XVxeZcni1twuQ==,
+            }
         dev: true
 
     /openapi3-ts@4.2.1:
