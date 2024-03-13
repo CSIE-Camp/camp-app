@@ -1,8 +1,9 @@
 <script lang="ts">
 	let email: string;
 	let ok: boolean | null = null;
-
 	let running = false;
+	let open_month = "4";
+	let open_day = "3";
 	async function send() {
 		if (running) {
 			return;
@@ -25,6 +26,41 @@
 			running = false;
 		}
 	}
+	function countDownDate(countDate: string = "2024-07-01T00:00:00") {
+		let TargetDate = new Date(countDate).getTime();
+		let now = new Date().getTime();
+		let distance = TargetDate - now;
+		return distance;
+	}
+
+	let sign_up_date =
+		"2024-" +
+		(open_month.length === 1 ? "0" + open_month : open_month) +
+		"-" +
+		(open_day.length === 1 ? "0" + open_day : open_day) +
+		"T00:00:00";
+	let time_to_sign_up = countDownDate(sign_up_date);
+	let timer =
+		Math.floor(time_to_sign_up / (1000 * 60 * 60 * 24)) +
+		" 天 " +
+		Math.floor((time_to_sign_up % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)) +
+		" 小時 " +
+		Math.floor((time_to_sign_up % (1000 * 60 * 60)) / (1000 * 60)) +
+		" 分 " +
+		Math.floor((time_to_sign_up % (1000 * 60)) / 1000) +
+		" 秒 ";
+	setInterval(() => {
+		time_to_sign_up = countDownDate(sign_up_date);
+		timer =
+			Math.floor(time_to_sign_up / (1000 * 60 * 60 * 24)) +
+			" 天 " +
+			Math.floor((time_to_sign_up % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)) +
+			" 小時 " +
+			Math.floor((time_to_sign_up % (1000 * 60 * 60)) / (1000 * 60)) +
+			" 分 " +
+			Math.floor((time_to_sign_up % (1000 * 60)) / 1000) +
+			" 秒 ";
+	}, 1000);
 </script>
 
 <svelte:head>
@@ -37,7 +73,24 @@
 
 <div class="flex h-full w-full items-center justify-center">
 	<div class="w-full max-w-lg p-2">
-		{#if ok}
+		{#if time_to_sign_up > 0}
+			<div class="alert alert-warning">
+				<div>
+					<div class="mb-4">
+						<h1 class="text-5xl font-bold">報名倒數計時</h1>
+						<div class="text-2xl text-primary">
+							2024 年 {open_month} 月 {open_day} 日
+						</div>
+						<div class="text-3xl">{timer}</div>
+					</div>
+					<div>報名尚未開放</div>
+					<div class="divider divider-horizontal mx-0" />
+					<div class="text-sm">
+						報名將於 2024 年 {open_month} 月 {open_day} 日開放，請耐心等候。
+					</div>
+				</div>
+			</div>
+		{:else if ok}
 			<h1 class="mb-2 text-3xl">登入連結已寄送</h1>
 			<p>請至你的電子郵件收取登入連結！</p>
 			<p class="italic text-primary">{email}</p>
