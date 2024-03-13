@@ -30,9 +30,9 @@ CREATE TABLE TaskProgress (
     -- 完成日期
     avatar TEXT,
     -- 完成日期
-    quiz TEXT,
+    quiz TEXT
     -- GitHub 帳號
-    github TEXT
+    -- github TEXT
 );
 
 DROP TABLE IF EXISTS Application;
@@ -66,4 +66,12 @@ CREATE TABLE IF NOT EXISTS Payment (
     account TEXT NOT NULL,
     time TEXT NOT NULL,
     updated TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Voting (
+    email TEXT NOT NULL,
+    target TEXT NOT NULL,
+    vote INT NOT NULL,
+    PRIMARY KEY (email, target)
+
 );
