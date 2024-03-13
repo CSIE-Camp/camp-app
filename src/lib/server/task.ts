@@ -1,6 +1,7 @@
 import { db } from "./db";
 
-export const tasks = ["profile", "avatar", "quiz", "github"] as const;
+// export const tasks = ["profile", "avatar", "quiz", "github"] as const;
+export const tasks = ["profile", "avatar", "quiz"] as const;
 export const selfchecks = ["quiz"];
 
 export async function complete(

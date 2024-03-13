@@ -33,7 +33,7 @@ export interface TaskProgress {
 	profile: string;
 	avatar: string;
 	quiz: string;
-	github: string;
+	// github: string;
 }
 
 export interface Voting {

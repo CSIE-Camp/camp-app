@@ -44,5 +44,7 @@ export const ProfileSchema = z.object({
 });
 
 export const TaskSchema = z.object({
-	task: z.enum(["profile", "avatar", "quiz", "github"]),
+	// task: z.enum(["profile", "avatar", "quiz", "github"]),
+	task: z.enum(["profile", "avatar", "quiz"]),
+
 });

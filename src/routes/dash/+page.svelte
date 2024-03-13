@@ -32,14 +32,14 @@
 			action: () => goto("/dash/quiz"),
 			done: !!$task.quiz,
 		},
-		{
-			title: "連結 GitHub 帳號",
-			description:
-				"我們在營隊期間會透過 GitHub 提供相關的教學資源。\n你也可以藉這個機會稍微認識 GitHub。",
-			action: open_github,
-			redo: open_github,
-			done: !!$task.github,
-		},
+		// {
+		// 	title: "連結 GitHub 帳號",
+		// 	description:
+		// 		"我們在營隊期間會透過 GitHub 提供相關的教學資源。\n你也可以藉這個機會稍微認識 GitHub。",
+		// 	action: open_github,
+		// 	redo: open_github,
+		// 	done: !!$task.github,
+		// },
 	];
 
 	onMount(async () => {
@@ -62,18 +62,18 @@
 		});
 	});
 
-	async function open_github() {
-		const state = crypto.getRandomValues(new Uint32Array(1))[0].toString(16);
-		localStorage.setItem("github_state", state);
-		const url = new URL("https://github.com/login/oauth/authorize");
-		url.searchParams.set("client_id", "95dd30f912dfbdf9c3fa");
-		url.searchParams.set("state", state);
-		const win = window.open(url.toString(), "_blank");
-		if (!win) {
-			return;
-		}
-		console.log("opened GitHub auth");
-	}
+	// async function open_github() {
+	// 	const state = crypto.getRandomValues(new Uint32Array(1))[0].toString(16);
+	// 	localStorage.setItem("github_state", state);
+	// 	const url = new URL("https://github.com/login/oauth/authorize");
+	// 	url.searchParams.set("client_id", "95dd30f912dfbdf9c3fa");
+	// 	url.searchParams.set("state", state);
+	// 	const win = window.open(url.toString(), "_blank");
+	// 	if (!win) {
+	// 		return;
+	// 	}
+	// 	console.log("opened GitHub auth");
+	// }
 
 	async function apply() {
 		const res = await fetch("/api/application", {
@@ -190,7 +190,8 @@
 		<div class="mx-auto my-8 flex max-w-xl flex-col items-center">
 			<h1 class="text-xl md:text-3xl">帳號：{$email}</h1>
 
-			{#if $task.profile && $task.avatar && $task.quiz && $task.github}
+			<!-- {#if $task.profile && $task.avatar && $task.quiz && $task.github} -->
+			{#if $task.profile && $task.avatar && $task.quiz}
 				<div class="divider" />
 				<h2 class="text-lg md:text-xl">報名申請狀態</h2>
 				<p class="text-sm opacity-60">第一階段報名審查已完成</p>
@@ -202,7 +203,7 @@
 						class:text-success={application.status?.includes("錄取")}
 						class:text-warning={application.status?.includes("備取")}
 					>
-						{application.status}
+						{application.status?.includes("備取") ? "備取" : application.status}
 					</div>
 				{/if}
 
@@ -325,7 +326,7 @@
 
 			<div class="divider" />
 			<h2 class="text-lg md:text-xl">你的報名資格</h2>
-			<p class="text-sm opacity-60">完成三項小任務即可取得報名資格！</p>
+			<p class="text-sm opacity-60">完成兩項小任務即可取得報名資格！</p>
 			<div class="mt-4 flex w-full flex-col gap-4">
 				{#each tasks as task}
 					<div>
