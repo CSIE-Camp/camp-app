@@ -44,6 +44,7 @@ export const load: PageServerLoad = async ({ locals, platform }) => {
 			"Profile.skill_mastered",
 			(b) => b.fn.sum("vote").as("score"),
 			"Application.status",
+			"Application.created",
 			"Payment.account",
 			"Payment.time as pay_date",
 			"Attachment.file",
