@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { hash } from "$lib/hash";
-	import { spacing } from "pangu";
+	// import { spacing } from "pangu";
+	import pkg from "pangu";
+	const { spacing } = pkg;
 	import Icon from "@iconify/svelte";
 	import type { PageData } from "./$types";
 
@@ -40,7 +42,7 @@
 				alert("投票失敗");
 				console.error("投票失敗", await res.text());
 			}
-
+			console.log("投票成功", target, choice);
 			data.applications.map((app) => {
 				if (app.email === target) {
 					app.vote = choice;
@@ -109,10 +111,18 @@
 											</span>
 										</h1>
 										<p class="py-6">
+											自我介紹：
 											{spacing(app.self_intro)}
 										</p>
 										<p class="py-6">
+											動機：
 											{spacing(app.motivation)}
+										</p>
+										<p class="py-6">
+											報名時間：
+											{spacing(app.created).split("T")[0] +
+												" " +
+												spacing(app.created).split("T")[1].split(".")[0]}
 										</p>
 										<div class="rounded-lg border border-primary p-4">
 											{app.status}
