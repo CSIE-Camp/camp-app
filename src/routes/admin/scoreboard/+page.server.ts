@@ -47,6 +47,7 @@ export const load: PageServerLoad = async ({ locals, platform }) => {
 			"Application.created",
 			"Payment.account",
 			"Payment.time as pay_date",
+			"Payment.correct",
 			"Attachment.file",
 		])
 		.orderBy("score", "desc");

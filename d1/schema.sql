@@ -65,7 +65,8 @@ CREATE TABLE IF NOT EXISTS Payment (
     email TEXT NOT NULL PRIMARY KEY,
     account TEXT NOT NULL,
     time TEXT NOT NULL,
-    updated TEXT NOT NULL
+    updated TEXT NOT NULL,
+    correct TEXT
 );
 
 CREATE TABLE IF NOT EXISTS Voting (

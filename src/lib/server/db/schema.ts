@@ -61,6 +61,7 @@ export interface Payment {
 	account: string;
 	time: string;
 	updated: string;
+	correct: string;
 }
 
 export interface Database {

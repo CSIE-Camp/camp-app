@@ -177,6 +177,27 @@
 			return 0;
 		}
 	}
+	async function payment_correct(app_email: string, correctness: string) {
+		console.log(correctness);
+		const res = await fetch("/admin/api/payment", {
+			method: "PATCH",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				email: app_email,
+				correctness: correctness,
+			}),
+		});
+
+		data.applications = data.applications.map((app) => {
+			if (app.email === app_email) {
+				app.correct = correctness;
+			}
+			return app;
+		});
+		return res;
+	}
 	function countAdmit(): [number, number, number, number] {
 		let admit_number: number = 0;
 		let candidate_number: number = 0;
@@ -391,13 +412,23 @@
 							>
 							<td
 								class="transition-all"
-								class:text-success={app.account && app.pay_date}
+								class:text-success={app.correct === "正確"}
+								class:text-warning={app.correct === "待確認" || !app.correct}
+								class:text-error={app.correct === "錯誤"}
 								on:click={() => {
-									selected = app;
+									if (app.account && app.pay_date) {
+										if (!app.correct || app.correct === "待確認") {
+											payment_correct(app.email, "正確");
+										} else if (app.correct === "正確") {
+											payment_correct(app.email, "錯誤");
+										} else if (app.correct === "錯誤") {
+											payment_correct(app.email, "待確認");
+										}
+									}
 								}}
 							>
 								{#if app.account && app.pay_date}
-									{app.account} ({app.pay_date})
+									{app.account} ({app.pay_date}) {app.correct}
 								{:else}
 									無
 								{/if}
