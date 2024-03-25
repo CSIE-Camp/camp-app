@@ -33,7 +33,7 @@ export interface TaskProgress {
 	profile: string;
 	avatar: string;
 	quiz: string;
-	github: string;
+	// github: string;
 }
 
 export interface Voting {
@@ -61,6 +61,7 @@ export interface Payment {
 	account: string;
 	time: string;
 	updated: string;
+	correct: string;
 }
 
 export interface Database {

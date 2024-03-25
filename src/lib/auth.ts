@@ -8,7 +8,7 @@ export const task = store<Record<z.infer<typeof TaskSchema>["task"], string | nu
 	profile: null,
 	avatar: null,
 	quiz: null,
-	github: null,
+	// github: null,
 });
 
 token.subscribe((jwt) => {
