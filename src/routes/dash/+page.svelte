@@ -168,7 +168,7 @@
 	<title>報名儀表板 | 師大資工營</title>
 	<meta
 		name="description"
-		content="快來報名 2023 師大資工營吧！有趣的課程、有趣的人、有趣的營隊！"
+		content="快來報名 2024 師大資工營吧！有趣的課程、有趣的人、有趣的營隊！"
 	/>
 </svelte:head>
 
