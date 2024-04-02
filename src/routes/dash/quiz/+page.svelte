@@ -7,58 +7,58 @@
 	let questions: Record<string, Field> = {
 		q1: {
 			display: "營隊舉辦的日期是哪時候呢？",
-			markdown: "（請參閱[報名資訊](https://camp.csie.cool/info)）",
+			markdown: "（請參閱[報名資訊](https://camp.csie.cool/#info)）",
 			value: "",
 			validate: () => true,
-			options: ["7/3 ~ 7/6", "7/3 ~ 7/7", "7/4 ~ 7/7"],
+			options: ["7/1 ~ 7/5", "7/3 ~ 7/7", "7/2~ 7/5"],
 		},
 		q2: {
-			display: "報名費用原價為多少新台幣呢？",
-			markdown: "（請參閱[報名資訊](https://camp.csie.cool/info)）",
+			display: "報名費用原價為多少新臺幣呢？",
+			markdown: "（請參閱[報名資訊](https://camp.csie.cool/#info)）",
 			value: "",
 			validate: () => true,
-			options: ["7900", "8900", "9900", "18900"],
+			options: ["8600", "9500", "9527", "免費"],
 		},
 		q3: {
 			display: "下列哪項「不是」你在營隊會學到的東西？",
-			markdown: "（請參閱[營隊介紹](https://camp.csie.cool/about)）",
+			markdown: "（請參閱[營隊介紹](https://camp.csie.cool/#about)）",
 			value: "",
 			validate: () => true,
-			options: ["製作網頁", "資訊安全與密碼學", "製作 Discord Bot", "製作虛擬實境遊戲"],
+			options: ["Python", "Pygame", "Papaya"],
 		},
+		// q4: {
+		// 	display: "營隊的住宿地點（旅居文旅-台北松山機場館）每房「沒有」什麼設施呢？",
+		// 	markdown: "（請參閱[報名資訊](https://camp.csie.cool/#info)）",
+		// 	value: "",
+		// 	validate: () => true,
+		// 	options: [
+		// 		"高速網路連線",
+		// 		"乾溼分離式衛浴 / 浴缸式衛浴",
+		// 		"Panasonic 免治馬桶",
+		// 		"快煮壺",
+		// 		"吸收式無聲冰箱",
+		// 		"電子式保險箱",
+		// 		"液晶電視",
+		// 		"戶外游泳池",
+		// 	],
+		// },
 		q4: {
-			display: "營隊的住宿地點（旅居文旅-台北松山機場館）每房「沒有」什麼設施呢？",
-			markdown: "（請參閱[報名資訊](https://camp.csie.cool/info)）",
-			value: "",
-			validate: () => true,
-			options: [
-				"高速網路連線",
-				"乾溼分離式衛浴 / 浴缸式衛浴",
-				"Panasonic 免治馬桶",
-				"快煮壺",
-				"吸收式無聲冰箱",
-				"電子式保險箱",
-				"液晶電視",
-				"戶外游泳池",
-			],
-		},
-		q5: {
 			display: "請問以下程式碼中 d 的值為何？",
 			markdown:
-				"（參考 [let](https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Statements/let)、[jsconsole](https://jsconsole.com/)、[JavaScript 初探](https://developer.mozilla.org/zh-TW/docs/Learn/JavaScript/First_steps)）",
-			image: "https://i.imgur.com/TJv69iQ.png",
+				"```python= \na = 0 \nb = a + 10 \nc = b + 30 \na = a + 4 \nd = a + b * c \n``` \n \
+（參考 [The Python Tutorial](https://docs.python.org/zh-tw/3/tutorial/introduction.html#using-python-as-a-calculator)）",
 			value: "",
 			validate: () => true,
-			options: ["0", "10", "20", "30", "40", "50"],
+			options: ["400", "404", "420", "560", "等式不成立"],
 		},
 	};
 
 	const ans: Record<string, string> = {
-		q1: "7/3 ~ 7/7",
-		q2: "8900",
-		q3: "製作虛擬實境遊戲",
-		q4: "戶外游泳池",
-		q5: "40",
+		q1: "7/1 ~ 7/5",
+		q2: "9500",
+		q3: "Papaya",
+		// q4: "戶外游泳池",
+		q4: "404",
 	};
 
 	async function check() {
@@ -95,7 +95,7 @@
 	<title>報名測驗 | 師大資工營</title>
 	<meta
 		name="description"
-		content="快來報名 2023 師大資工營吧！有趣的課程、有趣的人、有趣的營隊！"
+		content="快來報名 2024 師大資工營吧！有趣的課程、有趣的人、有趣的營隊！"
 	/>
 </svelte:head>
 
