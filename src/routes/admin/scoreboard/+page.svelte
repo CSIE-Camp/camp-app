@@ -2,7 +2,7 @@
 	import { hash } from "$lib/hash";
 	import type { PageData } from "./$types";
 	let camp_admit_number: number = 80;
-	let camp_candidate_number: number = 160;
+	let camp_candidate_number: number = 1000;
 	export let data: PageData;
 	async function order(tp: string) {
 		data.applications.sort((a, b) => {
