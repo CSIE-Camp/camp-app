@@ -120,7 +120,7 @@
 			validate: (value) => ProfileSchema.shape.motivation.safeParse(value).success,
 			type: "textarea",
 			placeholder:
-				"想學習網頁開發來製作個人網站，最有興趣的課程是 AI Discord Bot，因為看起來很酷，而且 ...",
+				"想學習 Pygame 來製作遊戲，最有興趣的課程是 Pygame 遊戲設計，因為看起來很酷，而且 ...",
 		},
 		skill_experienced: {
 			display: "接觸過哪些程式語言或相關技能",
