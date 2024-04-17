@@ -8588,7 +8588,7 @@ packages:
             {
                 integrity: sha512-xxAkmxGHT+J/GourS5mVJeOXZzne1FR5ljeOUAMXUkfEhkLEllRreXpbl3dIYJlcJRfL1LO1uIAPpBpBfiqGPw==,
             }
-        engines: { node: ">= 16.0.0", pnpm: ^8.0.0 }
+        engines: { node: ">= 16.0.0", pnpm: ^8.0.0 || ^9.0.0 }
         requiresBuild: true
         peerDependencies:
             "@babel/core": ^7.10.2
