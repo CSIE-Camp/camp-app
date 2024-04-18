@@ -292,10 +292,10 @@
 							</span>
 						{/if}
 					</label>
-					<label class="input-group">
+					<label class="join">
 						<input
 							type="file"
-							class="file-input-bordered file-input-primary file-input w-full !rounded-l-lg"
+							class="join-item file-input-bordered file-input-primary file-input w-full !rounded-l-lg"
 							accept="application/pdf"
 							on:change={(evt) => {
 								// @ts-expect-error svelte missing type
