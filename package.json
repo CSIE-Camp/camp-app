@@ -15,7 +15,7 @@
 		"lint": "prettier --ignore-path .gitignore --check **/*.{ts,js,json,yaml,yml,svelte,html,css} && eslint .",
 		"format": "prettier --ignore-path .gitignore --write **/*.{ts,js,json,yaml,yml,svelte,html,css}",
 		"changeset": "changeset",
-		"upload": "pnpm build && wrangler pages deploy --project-name camp-backend .svelte-kit/cloudflare",
+		"upload": "pnpm build && wrangler pages publish --project-name camp-backend .svelte-kit/cloudflare",
 		"tail": "wrangler pages deployment tail --project-name camp-backend"
 	},
 	"devDependencies": {
