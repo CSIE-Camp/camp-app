@@ -58,7 +58,7 @@
 		{#if value.type === "textarea"}
 			<textarea
 				id="{id}-{key}"
-				class="textarea-bordered textarea w-full resize-y transition-all"
+				class="textarea textarea-bordered w-full resize-y transition-all"
 				class:textarea-error={!value.validate(value.value)}
 				bind:value={value.value}
 				placeholder={value.placeholder || ""}
@@ -67,7 +67,7 @@
 		{:else if value.type}
 			<input
 				id="{id}-{key}"
-				class="input-bordered input w-full transition-all"
+				class="input input-bordered w-full transition-all"
 				class:input-error={!value.validate(value.value)}
 				type={value.type}
 				on:input={(evt) => {
@@ -81,7 +81,7 @@
 		{:else if value.options}
 			<select
 				id="{id}-{key}"
-				class="select-bordered select w-full transition-all"
+				class="select select-bordered w-full transition-all"
 				class:select-error={!value.validate(value.value)}
 				bind:value={value.value}
 				on:change={() => save(key, value.value)}
@@ -93,7 +93,7 @@
 		{:else}
 			<input
 				id="{id}-{key}"
-				class="input-bordered input w-full transition-all"
+				class="input input-bordered w-full transition-all"
 				class:input-error={!value.validate(value.value)}
 				type="text"
 				bind:value={value.value}

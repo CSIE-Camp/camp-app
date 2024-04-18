@@ -103,13 +103,13 @@
 	<div class="mx-auto my-8 flex max-w-xl flex-col items-center">
 		<div class="mb-8 text-center">
 			<h1 class="text-3xl font-bold">報‍名測‍驗</h1>
-			<a href="/dash" class="btn-link btn no-underline">返回儀表板</a>
+			<a href="/dash" class="btn btn-link no-underline">返回儀表板</a>
 		</div>
 
 		<Form bind:form={questions} cache={false} />
 
 		<div class="divider" />
 
-		<button class="btn-primary btn" on:click={check}>對答案</button>
+		<button class="btn btn-primary" on:click={check}>對答案</button>
 	</div>
 </div>

@@ -303,7 +303,7 @@
 	<div class="mx-auto my-8 flex max-w-xl flex-col items-center">
 		<div class="mb-8 text-center">
 			<h1 class="text-3xl font-bold">填‍寫‍個‍人資‍料</h1>
-			<a href="/dash" class="btn-link btn no-underline">返回儀表板</a>
+			<a href="/dash" class="btn btn-link no-underline">返回儀表板</a>
 		</div>
 
 		<h2 class="text-2xl font-bold">基本資料</h2>
@@ -312,7 +312,7 @@
 
 		<h2 class="text-2xl font-bold">本人照片</h2>
 		<p>（正臉清晰可辨的單人生活照）</p>
-		<input class="file-input-bordered file-input m-4" type="file" accept="image/*" bind:files />
+		<input class="file-input file-input-bordered m-4" type="file" accept="image/*" bind:files />
 		{#if files?.[0] || remote_image}
 			<canvas bind:this={canvas} class="m-4 h-40" />
 		{/if}
@@ -330,7 +330,7 @@
 		<Form bind:form={about} />
 		<div class="divider" />
 
-		<button class="btn-primary btn" on:click={save} disabled={!!bad_fields.length || saving}>
+		<button class="btn btn-primary" on:click={save} disabled={!!bad_fields.length || saving}>
 			儲存
 		</button>
 		{#if bad_fields.length}
