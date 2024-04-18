@@ -13,7 +13,11 @@ export const task = store<Record<z.infer<typeof TaskSchema>["task"], string | nu
 
 token.subscribe((jwt) => {
 	if (jwt) {
-		const payload = JSON.parse(atob(jwt.split(".")[1]));
-		email.set(payload.email);
+		try {
+			const payload = JSON.parse(atob(jwt.split(".")[1]));
+			email.set(payload.email);
+		} catch {
+			email.set(null);
+		}
 	}
 });

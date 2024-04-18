@@ -102,7 +102,7 @@
 			<div class="form-control">
 				<div class="join">
 					<input
-						class="input-bordered input-primary input flex-1 join-item"
+						class="input join-item input-bordered input-primary flex-1"
 						type="email"
 						placeholder="電子郵件"
 						bind:value={email}
@@ -113,7 +113,7 @@
 						}}
 						disabled={running}
 					/>
-					<button class="btn-primary btn join-item" disabled={running} on:click={send}
+					<button class="btn btn-primary join-item" disabled={running} on:click={send}
 						>登入</button
 					>
 				</div>
@@ -130,7 +130,7 @@
 							<a
 								href="mailto:camp@csie.cool"
 								target="_blank"
-								class="link-primary link"
+								class="link link-primary"
 							>
 								camp@csie.cool
 							</a>

@@ -208,7 +208,7 @@
 
 				{#if application.status ? data.control.can_give_up : data.control.can_apply}
 					<button
-						class="btn-outline btn mt-2 w-full"
+						class="btn btn-outline mt-2 w-full"
 						class:btn-success={!application.status}
 						class:btn-error={application.status}
 						on:click={!application.status ? apply : cancel}
@@ -242,7 +242,7 @@
 					<input
 						type="text"
 						placeholder="12345"
-						class="input-bordered input w-full"
+						class="input input-bordered w-full"
 						bind:value={data.payment.account}
 					/>
 
@@ -257,12 +257,12 @@
 					</label>
 					<input
 						type="date"
-						class="input-bordered input w-full"
+						class="input input-bordered w-full"
 						bind:value={data.payment.time}
 					/>
 
 					<button
-						class="btn-primary btn my-4 mt-2 self-end"
+						class="btn btn-primary my-4 mt-2 self-end"
 						on:click={update_payment}
 						disabled={uploading ||
 							data.payment.account.length !== 5 ||
@@ -294,7 +294,7 @@
 					<label class="join">
 						<input
 							type="file"
-							class="join-item file-input-bordered file-input-primary file-input w-full !rounded-l-lg"
+							class="file-input join-item file-input-bordered file-input-primary w-full !rounded-l-lg"
 							accept="application/pdf"
 							on:change={(evt) => {
 								// @ts-expect-error svelte missing type
@@ -345,7 +345,7 @@
 						</div>
 						<p class="whitespace-pre-line text-sm opacity-60">{task.description}</p>
 						<button
-							class="btn-outline btn mt-2 w-full p-2"
+							class="btn btn-outline mt-2 w-full p-2"
 							class:hidden={!(task.done ? task.redo : task.action)}
 							on:click={task.done ? task.redo : task.action}
 							disabled={!data.control?.can_update_profile}

@@ -84,7 +84,7 @@
 
 		<div class="divider" />
 
-		<select class="select-bordered select-primary select mb-4" bind:value={group}>
+		<select class="select select-bordered select-primary mb-4" bind:value={group}>
 			{#each Object.keys(groups || []) as status}
 				<option value={status}>{status}</option>
 			{/each}
@@ -129,7 +129,7 @@
 										</div>
 										<div class="flex gap-2 p-4">
 											<button
-												class="btn-square btn"
+												class="btn btn-square"
 												class:btn-outline={app.vote !== 1}
 												class:btn-primary={app.vote === 1}
 												on:click={() => vote(app.email, 1)}
@@ -138,7 +138,7 @@
 												<Icon icon="mdi:thumb-up" />
 											</button>
 											<button
-												class="btn-outline btn-square btn"
+												class="btn btn-square btn-outline"
 												class:btn-outline={app.vote !== 0}
 												class:btn-primary={app.vote === 0}
 												on:click={() => vote(app.email, 0)}
@@ -147,7 +147,7 @@
 												<Icon icon="mdi:circle-outline" />
 											</button>
 											<button
-												class="btn-outline btn-square btn"
+												class="btn btn-square btn-outline"
 												class:btn-outline={app.vote !== -1}
 												class:btn-primary={app.vote === -1}
 												on:click={() => vote(app.email, -1)}

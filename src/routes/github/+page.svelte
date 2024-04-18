@@ -44,7 +44,7 @@
 			<div class="alert alert-error mb-4">
 				{error}
 			</div>
-			<a href="/dash" class="btn-primary btn">回到儀表板</a>
+			<a href="/dash" class="btn btn-primary">回到儀表板</a>
 		{:else}
 			<div class="alert alert-info">正在連接 GitHub 帳號...</div>
 		{/if}

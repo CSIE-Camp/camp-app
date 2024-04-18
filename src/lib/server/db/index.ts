@@ -14,7 +14,6 @@ if (env.DB_COMPONENT === "sqlite") {
 			.filter((s) => s.length > 0);
 		for (const stmt of stmts) {
 			console.log(stmt);
-			// @ts-expect-error kysely version not matching
 			await sql`${sql.raw(stmt)}`.execute(db);
 		}
 

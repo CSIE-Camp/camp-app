@@ -3,14 +3,8 @@ import { db } from "./index";
 export async function check_control(email: string) {
 	const control = await db
 		.selectFrom("UserControl")
-		.where((eb) => {
-			console.log(
-				"check_control",
-				"eb",
-				Object.entries(eb).map(([k, v]) => [k, typeof v]),
-			);
-			const { or, cmpr } = eb;
-			return or([cmpr("email", "=", email), cmpr("email", "=", "fallback")]);
+		.where(({ or, eb }) => {
+			return or([eb("email", "=", email), eb("email", "=", "fallback")]);
 		})
 		.selectAll()
 		.execute();
