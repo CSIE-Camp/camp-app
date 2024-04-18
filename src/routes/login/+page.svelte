@@ -72,7 +72,7 @@
 </svelte:head>
 
 <div class="flex h-full w-full items-center justify-center">
-	<div class="w-full max-w-lg p-2">
+	<div class="w-full max-w-lg p-4">
 		{#if time_to_sign_up > 0}
 			<div class="alert alert-warning">
 				<div>
@@ -100,9 +100,9 @@
 				<span class="label-text"> 輸入電子郵件，我們將會寄送專屬登入連結給你 </span>
 			</label>
 			<div class="form-control">
-				<div class="input-group">
+				<div class="join">
 					<input
-						class="input-bordered input-primary input flex-1"
+						class="input-bordered input-primary input flex-1 join-item"
 						type="email"
 						placeholder="電子郵件"
 						bind:value={email}
@@ -113,7 +113,9 @@
 						}}
 						disabled={running}
 					/>
-					<button class="btn-primary btn" disabled={running} on:click={send}>登入</button>
+					<button class="btn-primary btn join-item" disabled={running} on:click={send}
+						>登入</button
+					>
 				</div>
 			</div>
 			{#if ok === false}
