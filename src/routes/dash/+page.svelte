@@ -2,7 +2,6 @@
 	import { goto, invalidateAll } from "$app/navigation";
 	import { token, email, task } from "$lib/auth";
 	import { onMount } from "svelte";
-	// @ts-expect-error
 	import { Confetti } from "svelte-confetti";
 	import { fade } from "svelte/transition";
 	import Icon from "@iconify/svelte";
@@ -178,8 +177,8 @@
 			x={[-5, 5]}
 			y={[0, 0.1]}
 			delay={[0, 6500]}
-			duration="5000"
-			amount="800"
+			duration={5000}
+			amount={800}
 			fallDistance="100vh"
 		/>
 	</div>
