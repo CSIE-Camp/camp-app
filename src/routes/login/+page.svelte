@@ -2,8 +2,8 @@
 	let email: string;
 	let ok: boolean | null = null;
 	let running = false;
-	let open_month = "3";
-	let open_day = "3";
+	let open_month = "4";
+	let open_day = "20";
 	async function send() {
 		if (running) {
 			return;
