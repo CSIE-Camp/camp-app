@@ -2,7 +2,7 @@
 	import { hash } from "$lib/hash";
 	// import { spacing } from "pangu";
 	import pkg from "pangu";
-	const { spacing } = pkg;
+	const spacing = pkg.spacing.bind(pkg);
 	import Icon from "@iconify/svelte";
 	import type { PageData } from "./$types";
 
