@@ -224,9 +224,9 @@
 
 			{#if application.status?.includes("錄取") && data.control.can_update_additional_info}
 				<div class="divider" />
-				<h2 class="text-lg md:text-xl">繳費資料與家長同意書</h2>
+				<h2 class="text-lg md:text-xl">繳費資料與同意書</h2>
 				<p class="text-sm opacity-60">
-					請在完成繳費後輸入你的「匯款帳號」與上傳「家長同意書」
+					請在完成繳費後輸入你的「匯款帳號」與上傳「家長同意書及保險同意書」
 				</p>
 
 				<div class="form-control w-full">
@@ -274,7 +274,7 @@
 
 				<div class="form-control w-full">
 					<label class="label" for="">
-						<span class="label-text">家長同意書</span>
+						<span class="label-text">家長同意書與保險同意書（請合成一份上傳）</span>
 						{#if data.files.find((f) => f.file === "consent.pdf")}
 							<span class="label-text text-success">
 								<a
@@ -317,6 +317,14 @@
 							>
 								<Icon icon="carbon:download" class="mr-1 inline-block" />
 								下載家長同意書
+							</a>
+							<a
+								href="https://drive.google.com/file/d/1biU7xrUDut9MjMw4p44g3Ww48uC29xg3/view"
+								title="下載保險同意書"
+								target="_blank"
+							>
+								<Icon icon="carbon:download" class="mr-1 inline-block" />
+								下載保險同意書
 							</a>
 						</span>
 					</label>
