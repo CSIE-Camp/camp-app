@@ -1,8 +1,11 @@
 <script lang="ts">
 	import { hash } from "$lib/hash";
 	import type { PageData } from "./$types";
-	let camp_admit_number: number = 80;
-	let camp_candidate_number: number = 1000;
+	import * as zip from "@zip.js/zip.js";
+
+	const camp_admit_number: number = 80;
+	const camp_candidate_number: number = 1000;
+
 	export let data: PageData;
 	async function order(tp: string) {
 		data.applications.sort((a, b) => {
@@ -212,6 +215,68 @@
 
 		return [admit_number, candidate_number, M_candidate_number, F_candidate_number];
 	}
+
+	let zip_downloading = false;
+	async function download_zip() {
+		if (zip_downloading) {
+			return;
+		}
+		zip_downloading = true;
+
+		try {
+			const zipWriter = new zip.ZipWriter(new zip.BlobWriter("application/zip"));
+			const promises = [];
+			for (const app of data.applications) {
+				promises.push(
+					(async () => {
+						const dir = `${app.school || "未知學校"}/${app.name || "未知姓名"}`;
+						const bucket = await hash(app.email);
+						const profile = await fetch("/admin/file/" + bucket + "/profile.jpg");
+						const profile_blob = await profile.blob();
+						await zipWriter.add(dir + "/profile.jpg", new zip.BlobReader(profile_blob));
+						if (app.file) {
+							const file = await fetch("/admin/file/" + bucket + "/consent.pdf");
+							const file_blob = await file.blob();
+							await zipWriter.add(
+								dir + "/consent.pdf",
+								new zip.BlobReader(file_blob),
+							);
+						}
+					})(),
+				);
+			}
+			await Promise.all(promises);
+			const headers: (keyof PageData["applications"][number])[] = [
+				"email",
+				"name",
+				"school",
+				"gender",
+				"clothes_size",
+				"food_type",
+				"disease",
+				"created",
+				"pay_date",
+				"score",
+				"status",
+			];
+			const rows = data.applications.map((app) =>
+				headers.map((header) => app[header]).join(","),
+			);
+			await zipWriter.add(
+				"applications.csv",
+				new zip.TextReader(headers.join(",") + "\n" + rows.join("\n")),
+			);
+
+			const blob = await zipWriter.close();
+			const url = URL.createObjectURL(blob);
+			const a = document.createElement("a");
+			a.href = url;
+			a.download = "applications.zip";
+			a.click();
+		} finally {
+			zip_downloading = false;
+		}
+	}
 </script>
 
 <svelte:head>
@@ -222,7 +287,10 @@
 
 <div class="flex h-full w-full flex-col items-center overflow-auto p-4">
 	<div class="flex min-h-full w-full flex-col items-center">
-		<h1 class="mb-2 p-6 text-3xl">排行榜</h1>
+		<div class="flex flex-col">
+			<h1 class="mb-2 p-6 text-3xl">排行榜</h1>
+			<button class="btn btn-outline" on:click={download_zip}>下載</button>
+		</div>
 
 		<div class="divider" />
 
