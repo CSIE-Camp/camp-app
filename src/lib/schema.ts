@@ -1,8 +1,31 @@
 import { z } from "zod";
-import { verify_pid, verify_fb, verify_birth } from "./verify";
+import { verify_birth, verify_fb, verify_pid } from "./verify";
 
 export const AuthRequest = z.object({
 	email: z.string().email().max(255),
+});
+
+export const SendRequest = z.object({
+	from: z.object({
+		email: z.string().email().max(255),
+		name: z.string().max(255),
+	}),
+	subject: z.string().max(255),
+	content: z.array(
+		z.object({
+			type: z.enum(["text/plain", "text/html"]),
+			value: z.string().max(4095),
+		}),
+	),
+	personalizations: z.array(
+		z.object({
+			to: z.array(
+				z.object({
+					email: z.string().email().max(255),
+				}),
+			),
+		}),
+	),
 });
 
 export const TokenSchema = z.object({
@@ -46,5 +69,4 @@ export const ProfileSchema = z.object({
 export const TaskSchema = z.object({
 	// task: z.enum(["profile", "avatar", "quiz", "github"]),
 	task: z.enum(["profile", "avatar", "quiz"]),
-
 });

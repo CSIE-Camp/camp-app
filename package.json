@@ -79,5 +79,8 @@
 			"prettier --write"
 		]
 	},
-	"packageManager": "pnpm@9.4.0"
+	"packageManager": "pnpm@9.4.0",
+	"dependencies": {
+		"nodemailer": "^6.10.0"
+	}
 }

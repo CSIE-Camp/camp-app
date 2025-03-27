@@ -4,13 +4,16 @@ import { TOKEN_EXPIRY } from "$lib/config";
 import { AuthRequest, TokenSchema } from "$lib/schema";
 import { error, json } from "@sveltejs/kit";
 import jwt from "@tsndr/cloudflare-worker-jwt";
-import { create } from "hermes-mail";
+import nodemailer from "nodemailer";
 import EMAIL from "../../../../static/email-template.html?raw";
 import type { RequestHandler } from "./$types";
 
 export const POST: RequestHandler = async ({ url, request }) => {
-	if (!env.APP_SECRET || (!env.HERMES_TOKEN && !dev)) {
-		throw error(500, "APP_SECRET or HERMES_TOKEN not set");
+	if (!env.APP_SECRET) {
+		throw error(500, "APP_SECRET is not set");
+	}
+	if ((!env.SMTP_USER || !env.SMTP_PASS) && !dev) {
+		throw error(500, "SMTP credentials are not set");
 	}
 
 	const { email } = AuthRequest.parse(await request.json());
@@ -37,40 +40,32 @@ export const POST: RequestHandler = async ({ url, request }) => {
 		console.log("Use this URL to login:", `${origin}/auth?token=${encodeURIComponent(token)}`);
 	} else {
 		// send login email
-		const client = create({ baseUrl: "https://hermes.csie.cool" });
 		const content = EMAIL.replace(
 			/{link_url}/g,
 			`${origin}/auth?token=${encodeURIComponent(token)}`,
 		);
-		const { response } = await client.POST("/api/send", {
-			headers: {
-				Authorization: `Bearer ${env.HERMES_TOKEN}`,
-			},
-			body: {
-				from: {
-					email: "camp@csie.cool",
-					name: "師大資工營",
-				},
-				subject: "師大資工營報名登入",
-				content: [
-					{
-						type: "text/html",
-						value: content,
-					},
-				],
-				personalizations: [
-					{
-						to: [
-							{
-								email,
-							},
-						],
-					},
-				],
+		console.log(content);
+
+		const transporter = nodemailer.createTransport({
+			service: "gmail",
+			host: "smtp.gmail.com",
+			port: 587,
+			secure: false,
+			auth: {
+				user: env.SMTP_USER,
+				pass: env.SMTP_PASS,
 			},
 		});
 
-		if (!response.ok) {
+		try {
+			const info = await transporter.sendMail({
+				from: env.SMTP_USER,
+				to: email,
+				subject: "師大資工營報名登入",
+				html: content,
+			});
+			console.log("Email sent:", info);
+		} catch (err) {
 			throw error(500, "Failed to send login email");
 		}
 	}

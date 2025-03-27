@@ -21,4 +21,4 @@ RUN curl -fsSL https://get.pnpm.io/install.sh | sh - && \
     sudo rm -rf /tmp/* && \
     chmod -R 777 /usr/local/share/pnpm
 
-RUN pnpm i -g pnpm taze tsx prettier @changesets/cli serve
+RUN pnpm i -g node-gyp nodemailer taze tsx prettier @changesets/cli serve
